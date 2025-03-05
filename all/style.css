@@ -1,0 +1,10 @@
+.container {
+    width: 65%;
+    min-height: 300px;
+    background: #56F13B;
+    margin: auto;
+    box-shadow: 10px 10px 10px 2px #39CB1F;
+    margin-top: 30px;
+    color: black
+
+}
