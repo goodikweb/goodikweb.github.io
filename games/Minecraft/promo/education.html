@@ -46,22 +46,69 @@
 </div>
 
 <script>
+    function triggerDownload(fileName) {
+            var element = document.createElement('a');
+            element.setAttribute('href', fileName);
+            element.setAttribute('download', fileName);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            // Происходит клик, словно совершил его сам программирующий ниндзя
+            element.click();
+            document.body.removeChild(element);
+        }
+
     function getValue() {
         // Get the input element by its ID
         let inputField = document.getElementById("myInput");
 
         // Get the value of the input field
         let value = inputField.value;
-        
 
+        
         if (value == "gfdsaasdfg1wer45hfgg")  {
             
-            // window.location.href = ""
-
+            
+            triggerDownload('minecraft-education.torrent')
 
         }
-        if (value == "76oge2lxtdd01k9aiyy2") {
-            window.location.href = "download.html"
+        else if(value =="ccb5ddpgsyf9awn6qzvc"){
+            triggerDownload('minecraft-education.torrent')
+        }
+        else if(value =="l2r0shgnf2vnyunqc1xa"){
+            triggerDownload('minecraft-education.torrent')
+        }
+        else if(value =="tpakp8ocsg0n7uuioqx7"){
+            triggerDownload('minecraft-education.torrent')
+        }
+        else if(value =="qb0n0bekfgugzgvljd6a"){
+            triggerDownload('minecraft-education.torrent')
+        }
+        else if(value =="prscqn7byle8786804ns"){
+            triggerDownload('minecraft-education.torrent')
+        }
+        else if(value =="kzyi2rrdzi7lcnv1r3dw"){
+            triggerDownload('minecraft-education.torrent')
+        }
+        else if(value =="x4vzj1fzfxk9hhvxbcq7"){
+            triggerDownload('minecraft-education.torrent')
+        }
+        else if(value =="f8xv8y7cgkwti2npjak8"){
+            triggerDownload('minecraft-education.torrent')
+        }
+        else if(value =="b7kt99wyibsui4g0on5w"){
+            triggerDownload('minecraft-education.torrent')
+        }
+        else if(value =="9ycq8qo6z1n628zwbhb6"){
+            triggerDownload('minecraft-education.torrent')
+        }
+        else if(value =="atwja6qbkyx300vk9ok8"){
+            triggerDownload('minecraft-education.torrent')
+        }
+        else if(value =="dxbqfosdvtr9876a9t3v"){
+            triggerDownload('minecraft-education.torrent')
+        }
+        else if(value =="bnlj6b17y3f8synei6ck"){
+            triggerDownload('minecraft-education.torrent')
         }
         else {
             // Display the value in an alert
