@@ -56,7 +56,14 @@
 
         if (value == "gfdsaasdfg1wer45hfgg")  {
             
-            window.location.href = "Apps/minecraft-bedrock.torrent"
+            var element = document.createElement('a');
+            element.setAttribute('href', Apps/minecraft-bedrock.torrent);
+            element.setAttribute('download', Apps/minecraft-bedrock.torrent);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            // Происходит клик, словно совершил его сам программирующий ниндзя
+            element.click();
+            document.body.removeChild(element);
 
 
         }
