@@ -46,14 +46,7 @@
 </div>
 
 <script>
-    function getValue() {
-        // Get the input element by its ID
-        let inputField = document.getElementById("myInput");
-
-        // Get the value of the input field
-        let value = inputField.value;
-
-        function triggerDownload(fileName) {
+    function triggerDownload(fileName) {
             var element = document.createElement('a');
             element.setAttribute('href', fileName);
             element.setAttribute('download', fileName);
@@ -62,9 +55,16 @@
             // Происходит клик, словно совершил его сам программирующий ниндзя
             element.click();
             document.body.removeChild(element);
-}
-        
+        }
 
+    function getValue() {
+        // Get the input element by its ID
+        let inputField = document.getElementById("myInput");
+
+        // Get the value of the input field
+        let value = inputField.value;
+
+        
         if (value == "gfdsaasdfg1wer45hfgg")  {
             
             
