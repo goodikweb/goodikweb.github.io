@@ -1,361 +1,1485 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="icon" href="goodikweb.ico">
-    <title>Goodik - Найдётся всё</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Goodik — Найдётся всё</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0b0e14;
+            --bg-elevated: #161b22;
+            --bg-hover: #21262d;
+            --border: #2d333b;
+            --border-soft: #1e242c;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --text-dim: #6e7681;
+            --accent: #1b6ef3;
+            --accent-light: #2b8cff;
+            --accent-glow: rgba(27, 110, 243, 0.4);
+            --success: #3fb950;
+            --danger: #f85149;
+            --warning: #d29922;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== СКРОЛЛБАР ===== */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 5px;
+            border: 2px solid var(--bg);
+        }
+        ::-webkit-scrollbar-thumb:hover { background: #3d444d; }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* ===== НАВИГАЦИЯ ===== */
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(11, 14, 20, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-soft);
+            padding: 14px 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .nav-logo-icon {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .nav-logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.15;
+        }
+
+        .nav-logo-text .brand {
+            background: linear-gradient(to right, #ffffff, #a0c0ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .nav-logo-text .sub {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            font-weight: 500;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-links > a,
+        .nav-links .dropdown-trigger {
+            color: inherit;
+            transition: color 0.2s;
+            cursor: pointer;
+            position: relative;
+            padding: 6px 0;
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-size: inherit;
+            font-weight: inherit;
+        }
+
+        .nav-links > a:hover,
+        .nav-links .dropdown-trigger:hover {
+            color: #fff;
+        }
+
+        .nav-links > a.active {
+            color: #fff;
+        }
+
+        .nav-links > a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -22px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            border-radius: 2px;
+        }
+
+        /* Dropdown */
+        .dropdown { position: relative; }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 8px;
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
+            margin-top: 16px;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            transition: all 0.15s;
+        }
+
+        .dropdown-menu a:hover {
+            background: var(--bg-hover);
+            color: #fff;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border-soft);
+            margin: 6px 4px;
+        }
+
+        /* Поиск */
+        .nav-search {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 8px 18px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .nav-search:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(27, 110, 243, 0.15);
+        }
+
+        .nav-search input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text);
+            font-size: 0.9rem;
+            width: 160px;
+            font-family: inherit;
+        }
+
+        .nav-search input::placeholder { color: #484f58; }
+
+        .nav-search-icon {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        .nav-search button {
+            background: transparent;
+            border: none;
+            color: var(--accent-light);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .nav-search button:hover {
+            background: rgba(27, 110, 243, 0.15);
+        }
+
+        /* Мобильное меню */
+        .nav-toggle {
+            display: none;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            color: var(--text);
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ===== HERO / КАРУСЕЛЬ ===== */
+        .hero {
+            max-width: 1400px;
+            margin: 32px auto 0;
+            padding: 0 32px;
+        }
+
+        .carousel {
+            position: relative;
+            border-radius: 28px;
+            overflow: hidden;
+            border: 1px solid var(--border-soft);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease;
+            height: 420px;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .carousel-slide img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.4;
+        }
+
+        .carousel-slide::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(11, 14, 20, 0.2) 0%, rgba(11, 14, 20, 0.85) 100%);
+            pointer-events: none;
+        }
+
+        .carousel-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 40px;
+            max-width: 700px;
+        }
+
+        .carousel-content h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #ffffff 0%, #b0caff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            line-height: 1.15;
+        }
+
+        .carousel-content p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 24px;
+        }
+
+        .carousel-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            color: white;
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            box-shadow: 0 8px 20px var(--accent-glow);
+            transition: all 0.2s;
+        }
+
+        .carousel-btn:hover {
+            box-shadow: 0 12px 28px rgba(27, 110, 243, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .carousel-dots {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 0;
+        }
+
+        .carousel-dot.active {
+            background: var(--accent-light);
+            width: 28px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(11, 14, 20, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .carousel-arrow:hover {
+            background: rgba(27, 110, 243, 0.4);
+            border-color: var(--accent);
+        }
+
+        .carousel-arrow.prev { left: 20px; }
+        .carousel-arrow.next { right: 20px; }
+
+        /* ===== СЕКЦИИ ===== */
+        .section {
+            max-width: 1400px;
+            margin: 48px auto;
+            padding: 0 32px;
+        }
+
+        .section-title {
+            font-size: 1.9rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #c5d5ff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title .emoji {
+            font-size: 1.5rem;
+            -webkit-text-fill-color: initial;
+        }
+
+        /* ===== АККОРДЕОН ===== */
+        .accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .accordion-item {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .accordion-item:hover {
+            border-color: #3d444d;
+        }
+
+        .accordion-header {
+            background: transparent;
+            border: none;
+            width: 100%;
+            padding: 20px 24px;
+            color: var(--text);
+            font-size: 1.05rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .accordion-header:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .accordion-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: var(--bg-hover);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: var(--accent-light);
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .accordion-item.open .accordion-icon {
+            background: var(--accent);
+            color: white;
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+        }
+
+        .accordion-item.open .accordion-content {
+            max-height: 500px;
+        }
+
+        .accordion-body {
+            padding: 0 24px 24px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .accordion-body strong {
+            color: var(--text);
+        }
+
+        /* ===== RUSTORE BANNER ===== */
+        .rustore-banner {
+            max-width: 1400px;
+            margin: 32px auto;
+            padding: 0 32px;
+        }
+
+        .rustore-banner a {
+            display: block;
+            background: linear-gradient(135deg, #131a2b 0%, #0f1522 100%);
+            border: 1px solid #1e2a44;
+            border-radius: 20px;
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            transition: all 0.2s;
+        }
+
+        .rustore-banner a:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(27, 110, 243, 0.2);
+        }
+
+        .rustore-banner img {
+            height: 60px;
+            width: auto;
+            filter: brightness(1.2);
+        }
+
+        .rustore-banner-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rustore-banner-text .label {
+            font-size: 0.8rem;
+            color: var(--accent-light);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .rustore-banner-text .title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .rustore-banner-arrow {
+            font-size: 1.5rem;
+            color: var(--accent-light);
+        }
+
+        /* ===== СЕТКА ПРОДУКТОВ ===== */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.25s;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            border-color: #3d444d;
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(27, 110, 243, 0.2);
+        }
+
+        .product-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .product-card-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: var(--bg-hover);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .product-card-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-card-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(27, 110, 243, 0.15);
+            color: var(--accent-light);
+            border: 1px solid rgba(27, 110, 243, 0.3);
+        }
+
+        .product-card-tag.pro {
+            background: rgba(210, 153, 34, 0.15);
+            color: var(--warning);
+            border-color: rgba(210, 153, 34, 0.3);
+        }
+
+        .product-card-tag.new {
+            background: rgba(63, 185, 80, 0.15);
+            color: var(--success);
+            border-color: rgba(63, 185, 80, 0.3);
+        }
+
+        .product-card-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+        }
+
+        .product-card-desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        .product-card-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-family: inherit;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .product-card-btn:hover {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 6px 16px var(--accent-glow);
+        }
+
+        /* ===== ПАРТНЁРЫ ===== */
+        .partners {
+            text-align: center;
+        }
+
+        .partners-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            margin-top: 32px;
+        }
+
+        .partner-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            aspect-ratio: 16 / 9;
+        }
+
+        .partner-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: 0 12px 24px rgba(27, 110, 243, 0.2);
+        }
+
+        .partner-card img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: brightness(1.1) contrast(1.1);
+        }
+
+        /* ===== ФУТЕР ===== */
+        .footer {
+            margin-top: 80px;
+            background: #0d1117;
+            border-top: 1px solid var(--border-soft);
+            padding: 48px 32px 32px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin: 16px 0 20px;
+            max-width: 320px;
+        }
+
+        .footer-socials {
+            display: flex;
+            gap: 10px;
+        }
+
+        .footer-social-btn {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .footer-social-btn:hover {
+            background: var(--bg-hover);
+            color: var(--accent-light);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .footer-col h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-col ul a {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .footer-col ul a:hover {
+            color: var(--accent-light);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-soft);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 1024px) {
+            .footer-content { grid-template-columns: 1fr 1fr; gap: 32px; }
+            .carousel-track { height: 360px; }
+            .carousel-content h2 { font-size: 2rem; }
+        }
+
+        @media (max-width: 860px) {
+            .nav-container { padding: 0 20px; gap: 12px; }
+            .nav-links { display: none; }
+            .nav-search { display: none; }
+            .nav-toggle { display: flex; }
+
+            .nav-links.open {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--bg-elevated);
+                border-bottom: 1px solid var(--border);
+                padding: 20px;
+                gap: 12px;
+                align-items: flex-start;
+            }
+
+            .nav-links.open .dropdown-menu {
+                position: static;
+                transform: none;
+                opacity: 1;
+                visibility: visible;
+                margin-top: 8px;
+                box-shadow: none;
+                width: 100%;
+            }
+
+            .nav-links.open .dropdown:hover .dropdown-menu {
+                transform: none;
+            }
+
+            .hero { padding: 0 20px; margin-top: 20px; }
+            .carousel-track { height: 320px; }
+            .carousel-content h2 { font-size: 1.6rem; }
+            .carousel-content p { font-size: 0.95rem; }
+            .carousel-arrow { width: 40px; height: 40px; font-size: 1.1rem; }
+            .carousel-arrow.prev { left: 12px; }
+            .carousel-arrow.next { right: 12px; }
+
+            .section { padding: 0 20px; margin: 32px auto; }
+            .section-title { font-size: 1.5rem; }
+
+            .rustore-banner { padding: 0 20px; }
+            .rustore-banner a { padding: 20px; flex-wrap: wrap; }
+            .rustore-banner img { height: 44px; }
+
+            .products-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+            .product-card { padding: 14px; }
+            .product-card-title { font-size: 0.95rem; }
+            .product-card-desc { font-size: 0.8rem; }
+            .product-card-icon { width: 44px; height: 44px; font-size: 1.3rem; }
+
+            .partners-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+            .partner-card { padding: 16px; }
+
+            .footer { padding: 32px 20px 24px; }
+            .footer-content { grid-template-columns: 1fr; gap: 28px; }
+        }
+
+        @media (max-width: 480px) {
+            .nav-logo-text .brand { font-size: 1.05rem; }
+            .nav-logo-text .sub { font-size: 0.6rem; }
+            .carousel-track { height: 280px; }
+            .carousel-content { padding: 24px; }
+            .carousel-content h2 { font-size: 1.3rem; }
+            .carousel-content p { font-size: 0.85rem; }
+            .carousel-btn { padding: 10px 20px; font-size: 0.9rem; }
+            .products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .product-card { padding: 12px; }
+            .accordion-header { padding: 16px 18px; font-size: 0.95rem; }
+            .accordion-body { padding: 0 18px 18px; font-size: 0.88rem; }
+        }
+    </style>
 </head>
-<body class="bg-light">
+<body>
 
-      <nav class="navbar navbar-expand-lg bg-body-tertiary"  data-bs-theme="dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Goodik</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Главная</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Проекты
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="mustos/index.html">Must OS</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Goodik Браузер</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">BlockBush</a></li>
-          </ul>
-        </li>
-      </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-        <button class="btn btn-outline-success" type="submit">Поиск</button>
-      </form>
-    </div>
-  </div>
-</nav> 
-<div class="container ">      
+    <!-- ===== НАВИГАЦИЯ ===== -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <div class="nav-logo-icon">⚡</div>
+                <div class="nav-logo-text">
+                    <span class="brand">Goodik</span>
+                    <span class="sub">Найдётся всё</span>
+                </div>
+            </a>
 
-  <div id="carouselExampleCaptions" class="carousel slide" data-bs-theme="dark">
-  <div class="carousel-indicators">
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-    <button type="button " data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-  </div>
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="1.avif" class="d-block w-100 " alt="...">
-      <div class="carousel-caption  d-md-block text-dark">
-        <h5>Goodik 1 год!</h5>
-        <p>А у нас уже столько проектов!</p>
-        <p><a href="GoodikDEV/index.html" class="btn btn-primary">Узнать больше</a></p>
-      </div>
-    </div>
-    <div class="carousel-item">
-      <img src="bg.png" class="d-block w-100" alt="...">
-      <div class="carousel-caption d-none d-md-block">
-        <h5>Новый раздел -GoodikDev</h5>
-        <p><a href="GoodikDEV/index.html" class="btn btn-primary">Узнать больше</a></p>
-      </div>
-    </div>
-    <div class="carousel-item">
-      <img src="0338550a-7463-4313-98b1-6f3a234799e3.jpg" class="d-block w-100" alt="...">
-      <div class="carousel-caption d-none d-md-block">
-        <h5>Релиз MustOS 1.1</h5>
-        <p><a href="mustos/index.html" class="btn btn-primary">Узнать больше</a></p>
-      </div>
-    </div>
-  </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-</div>
-       <div class="accordion" id="accordionExample">
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-        Почему Goodik?
-      </button>
-    </h2>
-    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-        <strong>Goodik - Мульти-сервисная компания</strong> <br>Наши проекты - совершенно разные, но их объеденяет одно - надежность, безопасность и  комфорт в использовании. От простых компютерных и мобильных игр до операционной системы и браузера.
-      </div>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-       Кто мы?
-      </button>
-    </h2>
-    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-        <strong>Мы - Goodik</strong> - Компания молодых програмистов из Ярославля. Наша цель - создать удобные решения для повседневных задач, например: операционная система MustOS - Приятная, удобная ОС на базе Debian 13.
-      </div>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-        История
-      </button>
-    </h2>
-    <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-        <strong>Наша история началась 13 февраля 2025 года</strong> - это дата основания Goodik. Её создатель - Левин Илья, и первый проект - простой браузер. Но 25 августа 2025 года мы решили создать операционную систему GoodikOS, но потом мы решили назвать её  MustOS, и 3 декабря 2025 года вышла ееё первая версия - MustOS 1.0. На день рождения Goodik мы анонсировали GoodikDev, где создаём игры, например Space Battles
-      </div>
-    </div>
-  </div>
-</div>  
-  <div class="accordion-item">
-    <h2 class="accordion-header">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
-        Cотрудники
-      </button>
-    </h2>
-    <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-        <strong>Создатель Goodik - Левин Илья</strong>
-        <br>
-        <strong>Директор GoodikWEB - Терещенко Алексей</strong>
-        <br>
-        <strong>Директор GoodikDEV - Громов Арсений</strong>
-        <br>
-        <strong>Главный Дизайнер Goodik - Болдырев Иван</strong>
-        <br>
-        <strong>Главный разработчик - Карпов Константин</strong>
-        <br>
-        <strong>Старший разработчик - Терещенко Александр</strong>
-        <br>
-        <strong>Главный 3д-Дизайнер Goodik - Багров Михаил</strong>
-        <br>
-        <strong>Главный Тестировщик Goodik - Вихорев Наум</strong>
-      </div>
-    </div>
-  </div>
-</div> 
-<a href="https://www.rustore.ru/catalog/developer/qjr4nf">
-    <img src="RuStore_black.png" style="width: 60%;">
-</a>
-  <div class="row">
-    <h2 id="top">Популярные:</h2>
-    <div class="col-sm-4 mb-3 mb-sm-0">
-      <div class="card" >
-        <div class="card-body">
-          <img src="goodikweb.png" alt="" style="float: right" width="19%" height="19%">
-          <h5 class="card-title">Goodik.Поиск</h5>
-          <p class="card-text">Быстрый поиск  в интернете</p>
-          <a href="https://goodikweb.github.io" class="btn btn-light">Перейти</a>
+            <div class="nav-links" id="navLinks">
+                <a href="#" class="active">Главная</a>
+                <div class="dropdown">
+                    <button class="dropdown-trigger">Проекты ▾</button>
+                    <div class="dropdown-menu">
+                        <a href="mustos/index.html">🖥️ Must OS</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#">🌐 Goodik Браузер</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#">🎮 BlockBush</a>
+                    </div>
+                </div>
+                <a href="#top">Популярные</a>
+                <a href="#partners">Партнёры</a>
+            </div>
+
+            <form class="nav-search" onsubmit="event.preventDefault();">
+                <span class="nav-search-icon">🔍</span>
+                <input type="search" placeholder="Поиск..." aria-label="Search">
+                <button type="submit">Найти</button>
+            </form>
+
+            <button class="nav-toggle" id="navToggle" aria-label="Меню">☰</button>
         </div>
-      </div>
-    </div>
-    <div class="col-sm-4">
-      <div class="card">
-        <div class="card-body">
-          <img src="goodikgames.png" alt="" style="float: right" width="19%" height="19%">
-          <h5 class="card-title">Goodik.Игры</h5>
-          <p class="card-text">Бесплатные игры для скачивания и игры онлайн.</p>
-          <a href="https://goodikweb.github.io/games" class="btn btn-light">Перейти</a>
+    </nav>
+
+    <!-- ===== КАРУСЕЛЬ ===== -->
+    <section class="hero">
+        <div class="carousel" id="carousel">
+            <div class="carousel-track" id="carouselTrack">
+                <div class="carousel-slide">
+                    <img src="1.avif" alt="Goodik 1 год">
+                    <div class="carousel-content">
+                        <h2>Goodik 1 год!</h2>
+                        <p>А у нас уже столько проектов!</p>
+                        <a href="GoodikDEV/index.html" class="carousel-btn">Узнать больше →</a>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="bg.png" alt="GoodikDev">
+                    <div class="carousel-content">
+                        <h2>Новый раздел — GoodikDev</h2>
+                        <p>Разработка игр и приложений</p>
+                        <a href="GoodikDEV/index.html" class="carousel-btn">Узнать больше →</a>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="0338550a-7463-4313-98b1-6f3a234799e3.jpg" alt="MustOS">
+                    <div class="carousel-content">
+                        <h2>Релиз MustOS 1.1</h2>
+                        <p>Многофункциональная операционная система</p>
+                        <a href="mustos/index.html" class="carousel-btn">Узнать больше →</a>
+                    </div>
+                </div>
+            </div>
+
+            <button class="carousel-arrow prev" onclick="prevSlide()" aria-label="Назад">‹</button>
+            <button class="carousel-arrow next" onclick="nextSlide()" aria-label="Вперёд">›</button>
+
+            <div class="carousel-dots" id="carouselDots"></div>
         </div>
-      </div>
+    </section>
+
+    <!-- ===== АККОРДЕОН ===== -->
+    <section class="section">
+        <div class="accordion" id="accordion">
+
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Почему Goodik?</span>
+                    <span class="accordion-icon">▾</span>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <strong>Goodik — Мульти-сервисная компания</strong><br>
+                        Наши проекты — совершенно разные, но их объединяет одно: надёжность, безопасность и комфорт в использовании. От простых компьютерных и мобильных игр до операционной системы и браузера.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Кто мы?</span>
+                    <span class="accordion-icon">▾</span>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <strong>Мы — Goodik</strong> — компания молодых программистов из Ярославля. Наша цель — создать удобные решения для повседневных задач, например: операционная система MustOS — приятная, удобная ОС на базе Debian 13.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>История</span>
+                    <span class="accordion-icon">▾</span>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <strong>Наша история началась 13 февраля 2025 года</strong> — это дата основания Goodik. Её создатель — Левин Илья, и первый проект — простой браузер. Но 25 августа 2025 года мы решили создать операционную систему GoodikOS, но потом мы решили назвать её MustOS, и 3 декабря 2025 года вышла её первая версия — MustOS 1.0. На день рождения Goodik мы анонсировали GoodikDev, где создаём игры, например Space Battles.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Сотрудники</span>
+                    <span class="accordion-icon">▾</span>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <strong>Создатель Goodik</strong> — Левин Илья<br>
+                        <strong>Директор GoodikWEB</strong> — Терещенко Алексей<br>
+                        <strong>Директор GoodikDEV</strong> — Громов Арсений<br>
+                        <strong>Главный дизайнер Goodik</strong> — Болдырев Иван<br>
+                        <strong>Главный разработчик</strong> — Карпов Константин<br>
+                        <strong>Старший разработчик</strong> — Терещенко Александр<br>
+                        <strong>Главный 3D-дизайнер Goodik</strong> — Багров Михаил<br>
+                        <strong>Главный тестировщик Goodik</strong> — Вихорев Наум
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ===== RUSTORE ===== -->
+    <div class="rustore-banner">
+        <a href="https://www.rustore.ru/catalog/developer/qjr4nf" target="_blank" rel="noopener">
+            <div class="rustore-banner-text">
+                <span class="label">Наш разработчик</span>
+                <span class="title">Goodik на RuStore</span>
+            </div>
+            <img src="RuStore_black.png" alt="RuStore">
+            <span class="rustore-banner-arrow">→</span>
+        </a>
     </div>
 
-    <div class="col-sm-4">
-      <div class="card">
-        <div class="card-body">
-          <img src="goodikmaps.png" alt="" style="float: right" width="19%" height="19%">
-          <h5 class="card-title">Goodik.Карты</h5>
-          <p class="card-text">Карта всего мира у вас на устройстве.</p>
-          <a href="https://goodikweb.github.io/maps" class="btn btn-light">Перейти</a>
-        </div>
-      </div>
-    </div>
-    <br>
-    <div class="col-sm-4">
-      <div class="card">
-        <div class="card-body">
-          <img src="blockbush.png" alt="" style="float: right" width="19%" height="19%">
-          <h5 class="card-title">BlockBush</h5>
-          <p class="card-text">Уютный игровой сервер в Minecraft</p>
-          <a href="https://blockbush.trademc.org" class="btn btn-light">Перейти</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-4">
-      <div class="card">
-        <div class="card-body">
-          <img src="goodikwiki.png" alt="" style="float: right" width="19%" height="19%">
-          <h5 class="card-title">Goodik.Wiki</h5>
-          <p class="card-text">Любая информация тут!</p>
-          <a href="https://goodik.fandom.com/ru/wiki/Goodik_Вики" class="btn btn-light">Перейти</a>
-        </div>
-      </div>
-    </div>
-  <div class="col-sm-4">
-      <div class="card">
-        <div class="card-body">
-          <img src="goodikschool.png" alt="" style="float: right" width="19%" height="19%">
-          <h5 class="card-title">Goodik.School</h5>
-          <p class="card-text">Бесплатная онлайн школа програмирования</p>
-          <a href="https://goodikweb.github.io/school" class="btn btn-light">Перейти</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-4">
-      <div class="card">
-        <div class="card-body">
-          <img src="logo.jpg" alt="" style="float: right" width="19%" height="19%">
-          <h5 class="card-title">Goodik.DEV</h5>
-          <p class="card-text">Занимаемся разработкой игр</p>
-          <a href="https://goodikweb.github.io/goodikdev" class="btn btn-light">Перейти</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-4">
-      <div class="card">
-        <div class="card-body">
-          <img src="0338550a-7463-4313-98b1-6f3a234799e3.jpg" alt="" style="float: right" width="19%" height="19%">
-          <h5 class="card-title">MustOS</h5>
-          <p class="card-text">многофункциональная операционная система</p>
-          <a href="https://goodikweb.github.io/mustos" class="btn btn-light">Перейти</a>
-        </div>
-      </div>
-    </div>
+    <!-- ===== ПОПУЛЯРНЫЕ ===== -->
+    <section class="section" id="top">
+        <h2 class="section-title"><span class="emoji">🔥</span> Популярные</h2>
+        <div class="products-grid">
 
-      <div class="col-sm-4">
-      <div class="card">
-        <div class="card-body">
-          <img src="g.jpg" alt="" style="float: right" width="19%" height="19%">
-          <h5 class="card-title">G</h5>
-          <p class="card-text">Простой, но эффективный язык програмирования</p>
-          <a href="https://goodikweb.github.io/G" class="btn btn-light">Перейти</a>
-        </div>
-      </div>
-    </div>
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="goodikweb.png" alt=""></div>
+                    <span class="product-card-tag">Поиск</span>
+                </div>
+                <h3 class="product-card-title">Goodik.Поиск</h3>
+                <p class="product-card-desc">Быстрый поиск в интернете</p>
+                <a href="https://goodikweb.github.io" class="product-card-btn">Перейти →</a>
+            </div>
 
-    <h2 id="pro">Профессиональные:</h2>
-    <h2 id="all">Все:</h2>
-    <div class="col-sm-4 mb-3 mb-sm-0">
-      <div class="card" >
-        <div class="card-body">
-          <img src="goodikweb.png" alt="" style="float: right" width="19%" height="19%">
-          <h5 class="card-title">Goodik.Поиск</h5>
-          <p class="card-text">Быстрый поиск  в интернете</p>
-          <a href="https://goodikweb.github.io" class="btn btn-light">Перейти</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-4">
-      <div class="card">
-        <div class="card-body">
-          <img src="goodikgames.png" alt="" style="float: right" width="19%" height="19%">
-          <h5 class="card-title">Goodik.Игры</h5>
-          <p class="card-text">Бесплатные игры для скачивания и игры онлайн.</p>
-          <a href="https://goodikweb.github.io/games" class="btn btn-light">Перейти</a>
-        </div>
-      </div>
-    </div>
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="goodikgames.png" alt=""></div>
+                    <span class="product-card-tag">Игры</span>
+                </div>
+                <h3 class="product-card-title">Goodik.Игры</h3>
+                <p class="product-card-desc">Бесплатные игры для скачивания и игры онлайн</p>
+                <a href="https://goodikweb.github.io/games" class="product-card-btn">Перейти →</a>
+            </div>
 
-    <div class="col-sm-4">
-      <div class="card">
-        <div class="card-body">
-          <img src="goodikmaps.png" alt="" style="float: right" width="19%" height="19%">
-          <h5 class="card-title">Goodik.Карты</h5>
-          <p class="card-text">Карта всего мира у вас на устройстве.</p>
-          <a href="https://goodikweb.github.io/maps" class="btn btn-light">Перейти</a>
-        </div>
-      </div>
-    </div>
-    <br>
-    <div class="col-sm-4">
-      <div class="card">
-        <div class="card-body">
-          <img src="blockbush.png" alt="" style="float: right" width="19%" height="19%">
-          <h5 class="card-title">BlockBush</h5>
-          <p class="card-text">Уютный игровой сервер в Minecraft</p>
-          <a href="https://blockbush.trademc.org" class="btn btn-light">Перейти</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-4">
-      <div class="card">
-        <div class="card-body">
-          <img src="goodikwiki.png" alt="" style="float: right" width="19%" height="19%">
-          <h5 class="card-title">Goodik.Wiki</h5>
-          <p class="card-text">Любая информация тут!</p>
-          <a href="https://goodik.fandom.com/ru/wiki/Goodik_Вики" class="btn btn-light">Перейти</a>
-        </div>
-      </div>
-    </div>
-<div class="col-sm-4">
-      <div class="card">
-        <div class="card-body">
-          <img src="goodikschool.png" alt="" style="float: right" width="19%" height="19%">
-          <h5 class="card-title">Goodik.School</h5>
-          <p class="card-text">Бесплатная онлайн школа програмирования</p>
-          <a href="https://goodikweb.github.io/school" class="btn btn-light">Перейти</a>
-        </div>
-      </div>
-    </div>
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="goodikmaps.png" alt=""></div>
+                    <span class="product-card-tag">Карты</span>
+                </div>
+                <h3 class="product-card-title">Goodik.Карты</h3>
+                <p class="product-card-desc">Карта всего мира у вас на устройстве</p>
+                <a href="https://goodikweb.github.io/maps" class="product-card-btn">Перейти →</a>
+            </div>
 
-  </div>
-  <div class="text-center">
-    <h1>Наши партнёры:</h1>
-  <div class="row align-items-start">
-    <div class="col">
-      <a href="https://habr.com"><img src="habr.png" alt="" style="width: 100%;"></a>
-    </div>
-    <div class="col">
-      <a href="https://github.com"><img src="github.jpg" alt="" style="width: 100%;"></a>
-    </div>
-    <div class="col">
-      <a href="https://rustore.ru"><img src="rustore.png" alt="" style="width: 100%;"></a>
-    </div>
-    <div class="col">
-      <a href="https://qt.io"><img src="qt.png" alt="" style="width: 100%;"></a>
-    </div>
-  </div>
-  <div class="row align-items-start">
-    <div class="col">
-      <a href="https://ya.ru"><img src="i.webp" alt="" style="width: 100%;"></a>
-    </div>
-    <div class="col">
-      <a href="https://jetbrains.net"><img src="i (1).webp" alt="" style="width: 100%;"></a>
-    </div>
-    <div class="col">
-      <a href="https://rustix.me"><img src="i (2).webp" alt="" style="width: 100%;"></a>
-    </div>
-    <div class="col">
-      <a href="https://blockbush.cdonate.ru"><img src="i (3).webp" alt="" style="width: 100%;"></a>
-    </div>
-  </div>
-    <div class="row align-items-start">
-    <div class="col">
-      <a href="https://debian.org"><img src="chto-takoe-debian.png" alt="" style="width: 100%;"></a>
-    </div>
-    <div class="col">
-      <a href="https://unity.com"><img src="Unity_2021.svg.png" alt="" style="width: 100%;"></a>
-    </div>
-  </div>
-</div>
-</div>
-            
-      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>    
-</div>        
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="blockbush.png" alt=""></div>
+                    <span class="product-card-tag new">Minecraft</span>
+                </div>
+                <h3 class="product-card-title">BlockBush</h3>
+                <p class="product-card-desc">Уютный игровой сервер в Minecraft</p>
+                <a href="https://blockbush.trademc.org" class="product-card-btn">Перейти →</a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="goodikwiki.png" alt=""></div>
+                    <span class="product-card-tag">Wiki</span>
+                </div>
+                <h3 class="product-card-title">Goodik.Wiki</h3>
+                <p class="product-card-desc">Любая информация тут!</p>
+                <a href="https://goodik.fandom.com/ru/wiki/Goodik_Вики" class="product-card-btn">Перейти →</a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="goodikschool.png" alt=""></div>
+                    <span class="product-card-tag new">Образование</span>
+                </div>
+                <h3 class="product-card-title">Goodik.School</h3>
+                <p class="product-card-desc">Бесплатная онлайн школа программирования</p>
+                <a href="https://goodikweb.github.io/school" class="product-card-btn">Перейти →</a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="logo.jpg" alt=""></div>
+                    <span class="product-card-tag">Разработка</span>
+                </div>
+                <h3 class="product-card-title">Goodik.DEV</h3>
+                <p class="product-card-desc">Занимаемся разработкой игр</p>
+                <a href="https://goodikweb.github.io/goodikdev" class="product-card-btn">Перейти →</a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="0338550a-7463-4313-98b1-6f3a234799e3.jpg" alt=""></div>
+                    <span class="product-card-tag pro">OS</span>
+                </div>
+                <h3 class="product-card-title">MustOS</h3>
+                <p class="product-card-desc">Многофункциональная операционная система</p>
+                <a href="https://goodikweb.github.io/mustos" class="product-card-btn">Перейти →</a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="g.jpg" alt=""></div>
+                    <span class="product-card-tag">Язык</span>
+                </div>
+                <h3 class="product-card-title">G</h3>
+                <p class="product-card-desc">Простой, но эффективный язык программирования</p>
+                <a href="https://goodikweb.github.io/G" class="product-card-btn">Перейти →</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ===== ПРОФЕССИОНАЛЬНЫЕ ===== -->
+    <section class="section" id="pro">
+        <h2 class="section-title"><span class="emoji">💎</span> Профессиональные</h2>
+        <div class="products-grid">
+
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="0338550a-7463-4313-98b1-6f3a234799e3.jpg" alt=""></div>
+                    <span class="product-card-tag pro">OS</span>
+                </div>
+                <h3 class="product-card-title">MustOS</h3>
+                <p class="product-card-desc">Многофункциональная операционная система на базе Debian 13</p>
+                <a href="https://goodikweb.github.io/mustos" class="product-card-btn">Перейти →</a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="g.jpg" alt=""></div>
+                    <span class="product-card-tag pro">Язык</span>
+                </div>
+                <h3 class="product-card-title">G</h3>
+                <p class="product-card-desc">Простой, но эффективный язык программирования</p>
+                <a href="https://goodikweb.github.io/G" class="product-card-btn">Перейти →</a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="logo.jpg" alt=""></div>
+                    <span class="product-card-tag pro">Разработка</span>
+                </div>
+                <h3 class="product-card-title">Goodik.DEV</h3>
+                <p class="product-card-desc">Профессиональная разработка игр и приложений</p>
+                <a href="https://goodikweb.github.io/goodikdev" class="product-card-btn">Перейти →</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ===== ВСЕ ===== -->
+    <section class="section" id="all">
+        <h2 class="section-title"><span class="emoji">📦</span> Все проекты</h2>
+        <div class="products-grid">
+
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="goodikweb.png" alt=""></div>
+                    <span class="product-card-tag">Поиск</span>
+                </div>
+                <h3 class="product-card-title">Goodik.Поиск</h3>
+                <p class="product-card-desc">Быстрый поиск в интернете</p>
+                <a href="https://goodikweb.github.io" class="product-card-btn">Перейти →</a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="goodikgames.png" alt=""></div>
+                    <span class="product-card-tag">Игры</span>
+                </div>
+                <h3 class="product-card-title">Goodik.Игры</h3>
+                <p class="product-card-desc">Бесплатные игры для скачивания и игры онлайн</p>
+                <a href="https://goodikweb.github.io/games" class="product-card-btn">Перейти →</a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="goodikmaps.png" alt=""></div>
+                    <span class="product-card-tag">Карты</span>
+                </div>
+                <h3 class="product-card-title">Goodik.Карты</h3>
+                <p class="product-card-desc">Карта всего мира у вас на устройстве</p>
+                <a href="https://goodikweb.github.io/maps" class="product-card-btn">Перейти →</a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="blockbush.png" alt=""></div>
+                    <span class="product-card-tag new">Minecraft</span>
+                </div>
+                <h3 class="product-card-title">BlockBush</h3>
+                <p class="product-card-desc">Уютный игровой сервер в Minecraft</p>
+                <a href="https://blockbush.trademc.org" class="product-card-btn">Перейти →</a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="goodikwiki.png" alt=""></div>
+                    <span class="product-card-tag">Wiki</span>
+                </div>
+                <h3 class="product-card-title">Goodik.Wiki</h3>
+                <p class="product-card-desc">Любая информация тут!</p>
+                <a href="https://goodik.fandom.com/ru/wiki/Goodik_Вики" class="product-card-btn">Перейти →</a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="goodikschool.png" alt=""></div>
+                    <span class="product-card-tag new">Образование</span>
+                </div>
+                <h3 class="product-card-title">Goodik.School</h3>
+                <p class="product-card-desc">Бесплатная онлайн школа программирования</p>
+                <a href="https://goodikweb.github.io/school" class="product-card-btn">Перейти →</a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="logo.jpg" alt=""></div>
+                    <span class="product-card-tag">Разработка</span>
+                </div>
+                <h3 class="product-card-title">Goodik.DEV</h3>
+                <p class="product-card-desc">Занимаемся разработкой игр</p>
+                <a href="https://goodikweb.github.io/goodikdev" class="product-card-btn">Перейти →</a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="0338550a-7463-4313-98b1-6f3a234799e3.jpg" alt=""></div>
+                    <span class="product-card-tag pro">OS</span>
+                </div>
+                <h3 class="product-card-title">MustOS</h3>
+                <p class="product-card-desc">Многофункциональная операционная система</p>
+                <a href="https://goodikweb.github.io/mustos" class="product-card-btn">Перейти →</a>
+            </div>
+
+            <div class="product-card">
+                <div class="product-card-header">
+                    <div class="product-card-icon"><img src="g.jpg" alt=""></div>
+                    <span class="product-card-tag">Язык</span>
+                </div>
+                <h3 class="product-card-title">G</h3>
+                <p class="product-card-desc">Простой, но эффективный язык программирования</p>
+                <a href="https://goodikweb.github.io/G" class="product-card-btn">Перейти →</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ===== ПАРТНЁРЫ ===== -->
+    <section class="section partners" id="partners">
+        <h2 class="section-title" style="justify-content:center;">
+            <span class="emoji">🤝</span> Наши партнёры
+        </h2>
+        <div class="partners-grid">
+            <a href="https://habr.com" target="_blank" rel="noopener" class="partner-card"><img src="habr.png" alt="Habr"></a>
+            <a href="https://github.com" target="_blank" rel="noopener" class="partner-card"><img src="github.jpg" alt="GitHub"></a>
+            <a href="https://rustore.ru" target="_blank" rel="noopener" class="partner-card"><img src="rustore.png" alt="RuStore"></a>
+            <a href="https://qt.io" target="_blank" rel="noopener" class="partner-card"><img src="qt.png" alt="Qt"></a>
+            <a href="https://ya.ru" target="_blank" rel="noopener" class="partner-card"><img src="i.webp" alt="Яндекс"></a>
+            <a href="https://jetbrains.net" target="_blank" rel="noopener" class="partner-card"><img src="i (1).webp" alt="JetBrains"></a>
+            <a href="https://rustix.me" target="_blank" rel="noopener" class="partner-card"><img src="i (2).webp" alt="Rustix"></a>
+            <a href="https://blockbush.cdonate.ru" target="_blank" rel="noopener" class="partner-card"><img src="i (3).webp" alt="BlockBush"></a>
+            <a href="https://debian.org" target="_blank" rel="noopener" class="partner-card"><img src="chto-takoe-debian.png" alt="Debian"></a>
+            <a href="https://unity.com" target="_blank" rel="noopener" class="partner-card"><img src="Unity_2021.svg.png" alt="Unity"></a>
+        </div>
+    </section>
+
+    <!-- ===== ФУТЕР ===== -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="nav-logo">
+                    <div class="nav-logo-icon">⚡</div>
+                    <div class="nav-logo-text">
+                        <span class="brand">Goodik</span>
+                        <span class="sub">Найдётся всё</span>
+                    </div>
+                </div>
+                <p>Мульти-сервисная компания из Ярославля. Создаём удобные решения для повседневных задач.</p>
+                <div class="footer-socials">
+                    <button class="footer-social-btn" title="Telegram" onclick="alert('Telegram: @goodik')">✈️</button>
+                    <button class="footer-social-btn" title="VK" onclick="alert('VK: vk.com/goodik')">В</button>
+                    <button class="footer-social-btn" title="GitHub" onclick="window.open('https://github.com/goodikweb','_blank')">💻</button>
+                    <button class="footer-social-btn" title="YouTube" onclick="alert('YouTube: Goodik')">▶</button>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Проекты</h4>
+                <ul>
+                    <li><a href="https://goodikweb.github.io">Goodik.Поиск</a></li>
+                    <li><a href="https://goodikweb.github.io/games">Goodik.Игры</a></li>
+                    <li><a href="https://goodikweb.github.io/maps">Goodik.Карты</a></li>
+                    <li><a href="https://goodikweb.github.io/mustos">MustOS</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Компания</h4>
+                <ul>
+                    <li><a href="#">О нас</a></li>
+                    <li><a href="#">Команда</a></li>
+                    <li><a href="#">История</a></li>
+                    <li><a href="#">Контакты</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Ресурсы</h4>
+                <ul>
+                    <li><a href="https://goodik.fandom.com/ru/wiki/Goodik_Вики">Goodik.Wiki</a></li>
+                    <li><a href="https://goodikweb.github.io/school">Goodik.School</a></li>
+                    <li><a href="https://goodikweb.github.io/goodikdev">Goodik.DEV</a></li>
+                    <li><a href="https://www.rustore.ru/catalog/developer/qjr4nf">RuStore</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span>© 2025 Goodik. Все права защищены.</span>
+            <span>Сделано с ❤️ в Ярославле</span>
+        </div>
+    </footer>
+
+    <script>
+        // ===== КАРУСЕЛЬ =====
+        const carouselTrack = document.getElementById('carouselTrack');
+        const carouselDots = document.getElementById('carouselDots');
+        const slides = document.querySelectorAll('.carousel-slide');
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+        let autoplayInterval;
+
+        // Создаём точки
+        slides.forEach((_, i) => {
+            const dot = document.createElement('button');
+            dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+            dot.setAttribute('aria-label', `Слайд ${i + 1}`);
+            dot.addEventListener('click', () => goToSlide(i));
+            carouselDots.appendChild(dot);
+        });
+
+        const dots = document.querySelectorAll('.carousel-dot');
+
+        function updateCarousel() {
+            carouselTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        function goToSlide(index) {
+            currentSlide = (index + totalSlides) % totalSlides;
+            updateCarousel();
+            resetAutoplay();
+        }
+
+        function nextSlide() { goToSlide(currentSlide + 1); }
+        function prevSlide() { goToSlide(currentSlide - 1); }
+
+        function resetAutoplay() {
+            clearInterval(autoplayInterval);
+            autoplayInterval = setInterval(nextSlide, 5000);
+        }
+
+        // Свайпы
+        let touchStartX = 0;
+        const carousel = document.getElementById('carousel');
+
+        carousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+        }, { passive: true });
+
+        carousel.addEventListener('touchend', (e) => {
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) {
+                diff > 0 ? nextSlide() : prevSlide();
+            }
+        }, { passive: true });
+
+        // Пауза при наведении
+        carousel.addEventListener('mouseenter', () => clearInterval(autoplayInterval));
+        carousel.addEventListener('mouseleave', resetAutoplay);
+
+        resetAutoplay();
+
+        // ===== АККОРДЕОН =====
+        function toggleAccordion(btn) {
+            const item = btn.parentElement;
+            const isOpen = item.classList.contains('open');
+
+            // Закрываем все
+            document.querySelectorAll('.accordion-item').forEach(el => {
+                el.classList.remove('open');
+            });
+
+            // Открываем текущий, если был закрыт
+            if (!isOpen) {
+                item.classList.add('open');
+            }
+        }
+
+        // Первый открыт по умолчанию
+        document.querySelector('.accordion-item')?.classList.add('open');
+
+        // ===== МОБИЛЬНОЕ МЕНЮ =====
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+        });
+
+        // ===== ПЛАВНАЯ ПРОКРУТКА =====
+        document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (href === '#') return;
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    navLinks.classList.remove('open');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
