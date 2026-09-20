@@ -1174,26 +1174,27 @@
 
     // ===== Данные товаров =====
     const products = [
-      { id: 1,  title: 'Пополнение Steam 1000 ₽',        category: 'STEAM',       price: 990,   oldPrice: 1100, rating: 4.9, reviews: 342, badge: 'hot',  gradient: ['#1b6ef3', '#0d4a9e'] },
-      { id: 2,  title: 'Steam Wallet 500 ₽',              category: 'STEAM',       price: 510,   oldPrice: null, rating: 4.8, reviews: 218, badge: null,   gradient: ['#2b8cff', '#1a5bbf'] },
-      { id: 3,  title: 'Cyberpunk 2077 (Steam)',          category: 'STEAM',       price: 1990,  oldPrice: 2990, rating: 4.7, reviews: 512, badge: 'sale', gradient: ['#f5c518', '#e08b00'] },
-      { id: 4,  title: 'PlayStation Plus 12 месяцев',     category: 'PLAYSTATION', price: 3490,  oldPrice: null, rating: 4.9, reviews: 189, badge: 'new',  gradient: ['#0070d1', '#00439c'] },
-      { id: 5,  title: 'Xbox Game Pass Ultimate 3 мес',   category: 'XBOX',        price: 2190,  oldPrice: 2700, rating: 4.8, reviews: 276, badge: 'hot',  gradient: ['#107c10', '#0a5209'] },
-      { id: 6,  title: 'Discord Nitro 1 месяц',           category: 'ПОДПИСКИ',    price: 590,   oldPrice: 750,  rating: 4.9, reviews: 421, badge: null,   gradient: ['#5865f2', '#3b45b8'] },
-      { id: 7,  title: 'Spotify Premium 3 месяца',        category: 'ПОДПИСКИ',    price: 890,   oldPrice: null, rating: 4.8, reviews: 334, badge: 'sale', gradient: ['#1db954', '#0f7a34'] },
-      { id: 8,  title: 'GTA V: Enhanced Edition',         category: 'STEAM',       price: 1490,  oldPrice: 2490, rating: 4.6, reviews: 789, badge: 'hot',  gradient: ['#f5a623', '#b8730a'] },
-      { id: 9,  title: 'Red Dead Redemption 2',           category: 'STEAM',       price: 2490,  oldPrice: 3490, rating: 5.0, reviews: 1024, badge: 'sale', gradient: ['#c0392b', '#7a1e14'] },
-      { id: 10, title: 'Fortnite 5000 V-Bucks',           category: 'ВАЛЮТА',      price: 3690,  oldPrice: null, rating: 4.7, reviews: 231, badge: null,   gradient: ['#9b59b6', '#5e2d7a'] },
-      { id: 11, title: 'Roblox 800 Robux',                category: 'ВАЛЮТА',      price: 890,   oldPrice: 990,  rating: 4.8, reviews: 445, badge: null,   gradient: ['#e74c3c', '#a0281c'] },
-      { id: 12, title: 'Minecraft: Java Edition',         category: 'STEAM',       price: 1690,  oldPrice: null, rating: 4.9, reviews: 1567, badge: 'hot', gradient: ['#7cb342', '#3d6b1e'] },
-      { id: 13, title: 'Nintendo Switch Online 12 мес',   category: 'ПОДПИСКИ',    price: 1990,  oldPrice: 2490, rating: 4.6, reviews: 98,  badge: 'new',  gradient: ['#e60012', '#8a0009'] },
-      { id: 14, title: 'Valorant 2050 VP',                category: 'ВАЛЮТА',      price: 1590,  oldPrice: null, rating: 4.7, reviews: 312, badge: null,   gradient: ['#ff4655', '#a02832'] },
-      { id: 15, title: 'Elden Ring (Steam)',              category: 'STEAM',       price: 2990,  oldPrice: 3990, rating: 4.9, reviews: 678, badge: 'sale', gradient: ['#b8860b', '#6e4f05'] },
-      { id: 16, title: 'YouTube Premium 3 месяца',        category: 'ПОДПИСКИ',    price: 690,   oldPrice: 890,  rating: 4.8, reviews: 256, badge: null,   gradient: ['#ff0000', '#a00000'] },
-      { id: 17, title: 'Call of Duty: MW III',            category: 'XBOX',        price: 3490,  oldPrice: 4490, rating: 4.5, reviews: 189, badge: 'hot',  gradient: ['#5c5c5c', '#2e2e2e'] },
-      { id: 18, title: 'FIFA 24 (EA FC 24)',              category: 'PLAYSTATION', price: 2790,  oldPrice: 3990, rating: 4.4, reviews: 402, badge: 'sale', gradient: ['#1a7f37', '#0d4a1f'] },
-      { id: 19, title: 'Terraria (Steam Key)',            category: 'КЛЮЧИ',       price: 490,   oldPrice: 690,  rating: 4.9, reviews: 890, badge: null,   gradient: ['#2b8cff', '#155ba8'] },
-      { id: 20, title: 'Among Us (Steam Key)',            category: 'КЛЮЧИ',       price: 290,   oldPrice: 390,  rating: 4.7, reviews: 1234, badge: 'hot', gradient: ['#e74c3c', '#a0281c'] }
+      //{ id: 1,  title: 'Пополнение Steam 1000 ₽',        category: 'STEAM',       price: 990,   oldPrice: 1100, rating: 4.9, reviews: 342, badge: 'hot',  gradient: ['#1b6ef3', '#0d4a9e'] },
+      //{ id: 2,  title: 'Steam Wallet 500 ₽',              category: 'STEAM',       price: 510,   oldPrice: null, rating: 4.8, reviews: 218, badge: null,   gradient: ['#2b8cff', '#1a5bbf'] },
+      //{ id: 3,  title: 'Cyberpunk 2077 (Steam)',          category: 'STEAM',       price: 1990,  oldPrice: 2990, rating: 4.7, reviews: 512, badge: 'sale', gradient: ['#f5c518', '#e08b00'] },
+      //{ id: 4,  title: 'PlayStation Plus 12 месяцев',     category: 'PLAYSTATION', price: 3490,  oldPrice: null, rating: 4.9, reviews: 189, badge: 'new',  gradient: ['#0070d1', '#00439c'] },
+      //{ id: 5,  title: 'Xbox Game Pass Ultimate 3 мес',   category: 'XBOX',        price: 2190,  oldPrice: 2700, rating: 4.8, reviews: 276, badge: 'hot',  gradient: ['#107c10', '#0a5209'] },
+      //{ id: 6,  title: 'Discord Nitro 1 месяц',           category: 'ПОДПИСКИ',    price: 590,   oldPrice: 750,  rating: 4.9, reviews: 421, badge: null,   gradient: ['#5865f2', '#3b45b8'] },
+      //{ id: 7,  title: 'Spotify Premium 3 месяца',        category: 'ПОДПИСКИ',    price: 890,   oldPrice: null, rating: 4.8, reviews: 334, badge: 'sale', gradient: ['#1db954', '#0f7a34'] },
+      //{ id: 8,  title: 'GTA V: Enhanced Edition',         category: 'STEAM',       price: 1490,  oldPrice: 2490, rating: 4.6, reviews: 789, badge: 'hot',  gradient: ['#f5a623', '#b8730a'] },
+      //{ id: 9,  title: 'Red Dead Redemption 2',           category: 'STEAM',       price: 2490,  oldPrice: 3490, rating: 5.0, reviews: 1024, badge: 'sale', gradient: ['#c0392b', '#7a1e14'] },
+      //{ id: 10, title: 'Fortnite 5000 V-Bucks',           category: 'ВАЛЮТА',      price: 3690,  oldPrice: null, rating: 4.7, reviews: 231, badge: null,   gradient: ['#9b59b6', '#5e2d7a'] },
+      //{ id: 11, title: 'Roblox 800 Robux',                category: 'ВАЛЮТА',      price: 890,   oldPrice: 990,  rating: 4.8, reviews: 445, badge: null,   gradient: ['#e74c3c', '#a0281c'] },
+      //{ id: 12, title: 'Minecraft: Java Edition',         category: 'STEAM',       price: 1690,  oldPrice: null, rating: 4.9, reviews: 1567, badge: 'hot', gradient: ['#7cb342', '#3d6b1e'] },
+      //{ id: 13, title: 'Nintendo Switch Online 12 мес',   category: 'ПОДПИСКИ',    price: 1990,  oldPrice: 2490, rating: 4.6, reviews: 98,  badge: 'new',  gradient: ['#e60012', '#8a0009'] },
+      //{ id: 14, title: 'Valorant 2050 VP',                category: 'ВАЛЮТА',      price: 1590,  oldPrice: null, rating: 4.7, reviews: 312, badge: null,   gradient: ['#ff4655', '#a02832'] },
+      //{ id: 15, title: 'Elden Ring (Steam)',              category: 'STEAM',       price: 2990,  oldPrice: 3990, rating: 4.9, reviews: 678, badge: 'sale', gradient: ['#b8860b', '#6e4f05'] },
+      //{ id: 16, title: 'YouTube Premium 3 месяца',        category: 'ПОДПИСКИ',    price: 690,   oldPrice: 890,  rating: 4.8, reviews: 256, badge: null,   gradient: ['#ff0000', '#a00000'] },
+      //{ id: 17, title: 'Call of Duty: MW III',            category: 'XBOX',        price: 3490,  oldPrice: 4490, rating: 4.5, reviews: 189, badge: 'hot',  gradient: ['#5c5c5c', '#2e2e2e'] },
+      //{ id: 18, title: 'FIFA 24 (EA FC 24)',              category: 'PLAYSTATION', price: 2790,  oldPrice: 3990, rating: 4.4, reviews: 402, badge: 'sale', gradient: ['#1a7f37', '#0d4a1f'] },
+      //{ id: 19, title: 'Terraria (Steam Key)',            category: 'КЛЮЧИ',       price: 490,   oldPrice: 690,  rating: 4.9, reviews: 890, badge: null,   gradient: ['#2b8cff', '#155ba8'] },
+      //{ id: 20, title: 'Among Us (Steam Key)',            category: 'КЛЮЧИ',       price: 290,   oldPrice: 390,  rating: 4.7, reviews: 1234, badge: 'hot', gradient: ['#e74c3c', '#a0281c'] },
+      { id: 21, title: 'Случайная игра в Steam (Steam Key)', category: 'STEAM',       price: 82,   oldPrice: null,  rating: 4.7, reviews: 1234, badge: 'null', gradient: ['#e74c3c', '#a0281c'] }
     ];
 
     const state = {
