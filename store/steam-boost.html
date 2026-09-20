@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Goodik — Steam Boost (By Goodik Store)</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0b0e14;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #e6edf3;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Плавные тени и градиенты */
+    .glass {
+      background: rgba(22, 27, 34, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid #2d333b;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+    }
+
+    /* Шапка */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 32px;
+      border-bottom: 1px solid #1e242c;
+      background: rgba(11, 14, 20, 0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.4rem;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-icon {
+      background: linear-gradient(135deg, #1b6ef3, #2b8cff);
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 0 15px rgba(27, 110, 243, 0.5);
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+    }
+
+    .logo-text .brand {
+      background: linear-gradient(to right, #ffffff, #a0c0ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .logo-text .sub {
+      font-size: 0.7rem;
+      color: #6e7681;
+      font-weight: 500;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #8b949e;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: inherit;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #ffffff;
+    }
+
+    .btn-support {
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #e6edf3;
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-support:hover {
+      background: #30363d;
+      border-color: #8b949e;
+    }
+
+    /* Основной контент */
+    .main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .card {
+      max-width: 1000px;
+      width: 100%;
+      padding: 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+    }
+
+    /* Левая часть – инфо */
+    .info-section h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #ffffff 0%, #b0caff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .info-section p {
+      color: #8b949e;
+      margin-bottom: 32px;
+      font-size: 1.1rem;
+    }
+
+    .features {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-bottom: 40px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .feature-icon {
+      background: #1c2129;
+      border-radius: 12px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #2d333b;
+      color: #2b8cff;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .feature-text {
+      font-weight: 500;
+    }
+
+    .feature-text small {
+      display: block;
+      color: #6e7681;
+      font-size: 0.85rem;
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    .trust-badge {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding-top: 16px;
+      border-top: 1px solid #1e242c;
+      color: #6e7681;
+      font-size: 0.9rem;
+      flex-wrap: wrap;
+    }
+
+    .trust-badge span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Правая часть – форма */
+    .form-section {
+      background: #0f131a;
+      border-radius: 20px;
+      padding: 28px 24px;
+      border: 1px solid #1e242c;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .form-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .form-sub {
+      color: #8b949e;
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+    }
+
+    /* Быстрые суммы */
+    .quick-amounts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .amount-btn {
+      background: #1a1f28;
+      border: 1px solid #2d333b;
+      color: #e6edf3;
+      padding: 10px 16px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      flex: 1 0 auto;
+    }
+
+    .amount-btn:hover {
+      background: #232a33;
+      border-color: #3d444d;
+    }
+
+    .amount-btn.active {
+      background: #1b6ef3;
+      border-color: #1b6ef3;
+      color: white;
+      box-shadow: 0 0 15px rgba(27, 110, 243, 0.4);
+    }
+
+    /* Поле ввода */
+    .input-group {
+      position: relative;
+      margin-bottom: 22px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: #8b949e;
+      margin-bottom: 8px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      background: #1a1f28;
+      border: 1px solid #2d333b;
+      border-radius: 14px;
+      padding: 0 16px;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+
+    .input-wrapper:focus-within {
+      border-color: #1b6ef3;
+      box-shadow: 0 0 0 3px rgba(27, 110, 243, 0.2);
+    }
+
+    .currency-symbol {
+      color: #8b949e;
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-right: 8px;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      padding: 16px 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: white;
+      outline: none;
+    }
+
+    .input-wrapper input::placeholder {
+      color: #484f58;
+      font-weight: 400;
+    }
+
+    /* Слайдер */
+    .slider-container {
+      margin-bottom: 24px;
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+      color: #8b949e;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: #1a1f28;
+      border-radius: 10px;
+      outline: none;
+      border: 1px solid #2d333b;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1b6ef3, #2b8cff);
+      border: 2px solid #0f131a;
+      box-shadow: 0 0 12px rgba(27, 110, 243, 0.6);
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1b6ef3, #2b8cff);
+      border: 2px solid #0f131a;
+      box-shadow: 0 0 12px rgba(27, 110, 243, 0.6);
+      cursor: pointer;
+    }
+
+    /* Промокод */
+    .promo-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 0;
+    }
+
+    .promo-input {
+      flex: 1;
+      background: #1a1f28;
+      border: 1px solid #2d333b;
+      border-radius: 14px;
+      padding: 14px 16px;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s;
+      text-transform: uppercase;
+      min-width: 0;
+    }
+
+    .promo-input::placeholder {
+      color: #484f58;
+      text-transform: none;
+    }
+
+    .promo-input:focus {
+      border-color: #1b6ef3;
+      box-shadow: 0 0 0 3px rgba(27, 110, 243, 0.2);
+    }
+
+    .promo-btn {
+      background: #1a1f28;
+      border: 1px solid #2d333b;
+      color: #e6edf3;
+      padding: 0 20px;
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .promo-btn:hover {
+      background: #232a33;
+      border-color: #3d444d;
+    }
+
+    .promo-btn:active {
+      background: #1b6ef3;
+      border-color: #1b6ef3;
+    }
+
+    .promo-hint {
+      font-size: 0.75rem;
+      color: #484f58;
+      margin-top: 6px;
+      min-height: 16px;
+    }
+
+    .promo-hint.success {
+      color: #3fb950;
+    }
+
+    .promo-hint.error {
+      color: #f85149;
+    }
+
+    /* Сетка методов оплаты */
+    .payment-methods {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .payment-card {
+      background: #1a1f28;
+      border: 1px solid #2d333b;
+      border-radius: 14px;
+      padding: 14px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .payment-card:hover {
+      background: #21262e;
+      border-color: #3d444d;
+    }
+
+    .payment-card.selected {
+      border-color: #1b6ef3;
+      background: #17223b;
+      box-shadow: 0 0 0 1px #1b6ef3;
+    }
+
+    .payment-icon {
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
+    .payment-info {
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .payment-info small {
+      display: block;
+      color: #6e7681;
+      font-size: 0.75rem;
+      font-weight: 400;
+    }
+
+    /* Комиссия и итог */
+    .summary {
+      background: #0b0e14;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 24px;
+      border: 1px solid #1e242c;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      color: #8b949e;
+    }
+
+    .summary-row.total {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: white;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #2d333b;
+      margin-bottom: 0;
+    }
+
+    .summary-row.total .amount {
+      color: #2b8cff;
+    }
+
+    /* Разделитель секции */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 28px 0 20px;
+      color: #6e7681;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .section-divider::before,
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #1e242c;
+    }
+
+    /* Форма данных пользователя */
+    .user-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-field label {
+      font-size: 0.85rem;
+      color: #8b949e;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-field input {
+      background: #1a1f28;
+      border: 1px solid #2d333b;
+      border-radius: 14px;
+      padding: 14px 16px;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+    }
+
+    .form-field input::placeholder {
+      color: #484f58;
+    }
+
+    .form-field input:focus {
+      border-color: #1b6ef3;
+      box-shadow: 0 0 0 3px rgba(27, 110, 243, 0.2);
+    }
+
+    .form-field input.error {
+      border-color: #f85149;
+      box-shadow: 0 0 0 3px rgba(248, 81, 73, 0.15);
+    }
+
+    .form-field .field-error {
+      font-size: 0.75rem;
+      color: #f85149;
+      margin-top: 4px;
+      min-height: 14px;
+    }
+
+    /* Кнопка */
+    .btn-pay {
+      width: 100%;
+      background: linear-gradient(135deg, #1b6ef3, #2b8cff);
+      border: none;
+      border-radius: 16px;
+      padding: 18px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 8px 20px rgba(27, 110, 243, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .btn-pay:hover {
+      background: linear-gradient(135deg, #2b7af0, #3d97ff);
+      box-shadow: 0 12px 28px rgba(27, 110, 243, 0.45);
+      transform: translateY(-1px);
+    }
+
+    .btn-pay:active {
+      transform: translateY(1px);
+      box-shadow: 0 4px 12px rgba(27, 110, 243, 0.3);
+    }
+
+    .disclaimer {
+      text-align: center;
+      color: #484f58;
+      font-size: 0.75rem;
+      margin-top: 12px;
+    }
+
+    /* Успешное сообщение */
+    .success-message {
+      display: none;
+      background: rgba(63, 185, 80, 0.1);
+      border: 1px solid #3fb950;
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 16px;
+      color: #3fb950;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .success-message.visible {
+      display: block;
+    }
+
+    /* Адаптив */
+    @media (max-width: 860px) {
+      .card {
+        grid-template-columns: 1fr;
+        padding: 24px;
+        gap: 32px;
+      }
+
+      .header {
+        padding: 16px 20px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .info-section h1 {
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 16px;
+      }
+
+      .form-section {
+        padding: 20px 16px;
+      }
+
+      .payment-methods {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-amounts .amount-btn {
+        flex: 1 0 30%;
+      }
+
+      .promo-group {
+        flex-direction: column;
+      }
+
+      .promo-btn {
+        padding: 14px;
+      }
+
+      .logo-text .brand {
+        font-size: 1.05rem;
+      }
+
+      .logo-text .sub {
+        font-size: 0.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="logo">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-text">
+        <span class="brand">Goodik — Steam Boost</span>
+        <span class="sub">By Goodik Store</span>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a href="#">Пополнение</a>
+      <a href="#">Помощь</a>
+      <a href="#">Блог</a>
+    </div>
+    <button class="btn-support">Поддержка 24/7</button>
+  </header>
+
+  <main class="main">
+    <div class="card glass">
+      <!-- Левая колонка: информация -->
+      <div class="info-section">
+        <h1>Пополнение Steam<br>за 30 секунд</h1>
+        <p>Безопасно, выгодно и без комиссии. Зачисление на кошелёк моментально.</p>
+
+        <div class="features">
+          <div class="feature-item">
+            <div class="feature-icon">🔒</div>
+            <div class="feature-text">
+              Безопасные платежи
+              <small>Шифрование и защита данных</small>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">⚡</div>
+            <div class="feature-text">
+              Мгновенное зачисление
+              <small>Средства приходят сразу</small>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">💰</div>
+            <div class="feature-text">
+              Без скрытых комиссий
+              <small>Вы платите ровно столько, сколько указали</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="trust-badge">
+          <span>✅ 50 000+ операций</span>
+          <span>⭐ 4.9 / 5</span>
+        </div>
+      </div>
+
+      <!-- Правая колонка: форма -->
+      <div class="form-section">
+        <div class="form-title">Пополнить кошелёк</div>
+        <div class="form-sub">Выберите сумму и способ оплаты</div>
+
+        <!-- Быстрые суммы -->
+        <div class="quick-amounts">
+          <button class="amount-btn" data-amount="100">100 ₽</button>
+          <button class="amount-btn" data-amount="300">300 ₽</button>
+          <button class="amount-btn" data-amount="500">500 ₽</button>
+          <button class="amount-btn active" data-amount="1000">1 000 ₽</button>
+        </div>
+
+        <!-- Ввод суммы -->
+        <div class="input-group">
+          <label>Сумма пополнения</label>
+          <div class="input-wrapper">
+            <span class="currency-symbol">₽</span>
+            <input type="number" id="amountInput" value="1000" min="10" max="1000" step="10" placeholder="Введите сумму">
+          </div>
+        </div>
+
+        <!-- Слайдер -->
+        <div class="slider-container">
+          <div class="slider-labels">
+            <span>10 ₽</span>
+            <span>1 000 ₽</span>
+          </div>
+          <input type="range" id="amountSlider" min="10" max="1000" step="10" value="1000">
+        </div>
+
+        <!-- Промокод -->
+        <div class="input-group">
+          <label>Промокод (если есть)</label>
+          <div class="promo-group">
+            <input type="text" class="promo-input" id="promoInput" placeholder="Введите промокод" maxlength="20">
+            <button class="promo-btn" id="applyPromo">Применить</button>
+          </div>
+          <div class="promo-hint" id="promoHint"></div>
+        </div>
+
+        <!-- Методы оплаты -->
+        <label style="display: block; font-size: 0.85rem; color: #8b949e; margin-bottom: 10px; font-weight: 500;">Способ оплаты</label>
+        <div class="payment-methods">
+          <div class="payment-card selected" data-method="card">
+            <div class="payment-icon">💳</div>
+            <div class="payment-info">
+              Банковская карта
+              <small>Visa, MasterCard, МИР</small>
+            </div>
+          </div>
+          <div class="payment-card" data-method="sbp">
+            <div class="payment-icon">📱</div>
+            <div class="payment-info">
+              СБП
+              <small>По номеру телефона</small>
+            </div>
+          </div>
+          <div class="payment-card" data-method="wallet">
+            <div class="payment-icon">👛</div>
+            <div class="payment-info">
+              ЮMoney
+              <small>Кошелёк</small>
+            </div>
+          </div>
+          <div class="payment-card" data-method="crypto">
+            <div class="payment-icon">₿</div>
+            <div class="payment-info">
+              Криптовалюта
+              <small>USDT, BTC, ETH</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Итог -->
+        <div class="summary">
+          <div class="summary-row">
+            <span>Сумма пополнения</span>
+            <span id="summaryAmount">1 000 ₽</span>
+          </div>
+          <div class="summary-row" id="discountRow" style="display: none; color: #3fb950;">
+            <span>Скидка по промокоду</span>
+            <span id="discountAmount">−0 ₽</span>
+          </div>
+          <div class="summary-row">
+            <span>Комиссия</span>
+            <span style="color: #3fb950;">0 ₽</span>
+          </div>
+          <div class="summary-row total">
+            <span>К оплате</span>
+            <span class="amount" id="totalAmount">1 000 ₽</span>
+          </div>
+        </div>
+
+        <!-- Разделитель -->
+        <div class="section-divider">Данные получателя</div>
+
+        <!-- Форма данных пользователя -->
+        <form class="user-form" id="userForm" novalidate>
+          <div class="form-field">
+            <label for="userName">Ваше имя</label>
+            <input type="text" id="userName" placeholder="Иван Иванов" required>
+            <div class="field-error" id="nameError"></div>
+          </div>
+
+          <div class="form-field">
+            <label for="userEmail">Электронная почта</label>
+            <input type="email" id="userEmail" placeholder="ivan@example.com" required>
+            <div class="field-error" id="emailError"></div>
+          </div>
+
+          <div class="form-field">
+            <label for="steamLogin">Логин Steam</label>
+            <input type="text" id="steamLogin" placeholder="Ваш логин в Steam" required>
+            <div class="field-error" id="steamError"></div>
+          </div>
+        </form>
+
+        <!-- Кнопка -->
+        <button class="btn-pay" id="payButton">
+          <span>Перейти к оплате</span>
+          <span>→</span>
+        </button>
+        <div class="disclaimer">
+          Нажимая кнопку, вы соглашаетесь с условиями сервиса Goodik Store
+        </div>
+
+        <!-- Сообщение об успехе -->
+        <div class="success-message" id="successMessage"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (function() {
+      // ==== Элементы ====
+      const amountInput = document.getElementById('amountInput');
+      const amountSlider = document.getElementById('amountSlider');
+      const quickButtons = document.querySelectorAll('.amount-btn');
+      const paymentCards = document.querySelectorAll('.payment-card');
+      const summaryAmount = document.getElementById('summaryAmount');
+      const totalAmount = document.getElementById('totalAmount');
+      const discountRow = document.getElementById('discountRow');
+      const discountAmount = document.getElementById('discountAmount');
+      const payButton = document.getElementById('payButton');
+      const promoInput = document.getElementById('promoInput');
+      const applyPromoBtn = document.getElementById('applyPromo');
+      const promoHint = document.getElementById('promoHint');
+      const successMessage = document.getElementById('successMessage');
+
+      // Поля формы
+      const userName = document.getElementById('userName');
+      const userEmail = document.getElementById('userEmail');
+      const steamLogin = document.getElementById('steamLogin');
+      const nameError = document.getElementById('nameError');
+      const emailError = document.getElementById('emailError');
+      const steamError = document.getElementById('steamError');
+
+      // ==== Константы ====
+      const MIN_AMOUNT = 10;
+      const MAX_AMOUNT = 1000;
+
+      // Промокоды: код -> процент скидки
+      const PROMO_CODES = {
+        'STEAM10': 10,
+        'BOOST15': 15,
+        'WELCOME5': 5,
+        'SUPER20': 20,
+        'GOODIK10': 10
+      };
+
+      // Текущая скидка (в %)
+      let currentDiscount = 0;
+      let appliedPromo = '';
+
+      // ==== Утилиты ====
+      function formatNumber(num) {
+        return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+      }
+
+      function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max);
+      }
+
+      // ==== Обновление итогов ====
+      function updateSummary() {
+        let amount = parseFloat(amountInput.value);
+        if (isNaN(amount)) amount = MIN_AMOUNT;
+        amount = clamp(amount, MIN_AMOUNT, MAX_AMOUNT);
+
+        // Синхронизация слайдера
+        amountSlider.value = amount;
+
+        // Подсветка быстрых кнопок
+        quickButtons.forEach(btn => {
+          const btnAmount = parseFloat(btn.dataset.amount);
+          btn.classList.toggle('active', btnAmount === amount);
+        });
+
+        // Итоговая сумма
+        const baseFormatted = formatNumber(amount) + ' ₽';
+        summaryAmount.textContent = baseFormatted;
+
+        // Скидка
+        if (currentDiscount > 0) {
+          const discountValue = amount * (currentDiscount / 100);
+          const finalAmount = amount - discountValue;
+          discountRow.style.display = 'flex';
+          discountAmount.textContent = '−' + formatNumber(discountValue) + ' ₽ (' + currentDiscount + '%)';
+          totalAmount.textContent = formatNumber(finalAmount) + ' ₽';
+        } else {
+          discountRow.style.display = 'none';
+          totalAmount.textContent = baseFormatted;
+        }
+      }
+
+      // ==== Синхронизация поля и слайдера ====
+      function setAmount(value) {
+        const clamped = clamp(value, MIN_AMOUNT, MAX_AMOUNT);
+        amountInput.value = clamped;
+        updateSummary();
+      }
+
+      // ==== Обработчики суммы ====
+      amountInput.addEventListener('input', () => {
+        let val = parseFloat(amountInput.value);
+        if (isNaN(val)) return;
+        updateSummary();
+      });
+
+      amountInput.addEventListener('blur', () => {
+        let val = parseFloat(amountInput.value);
+        if (isNaN(val) || val < MIN_AMOUNT) {
+          amountInput.value = MIN_AMOUNT;
+        } else if (val > MAX_AMOUNT) {
+          amountInput.value = MAX_AMOUNT;
+        }
+        updateSummary();
+      });
+
+      amountSlider.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        amountInput.value = val;
+        updateSummary();
+      });
+
+      quickButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const amount = parseFloat(btn.dataset.amount);
+          setAmount(amount);
+        });
+      });
+
+      // ==== Промокод ====
+      applyPromoBtn.addEventListener('click', () => {
+        const code = promoInput.value.trim().toUpperCase();
+
+        if (!code) {
+          promoHint.textContent = 'Введите промокод';
+          promoHint.className = 'promo-hint error';
+          currentDiscount = 0;
+          appliedPromo = '';
+          updateSummary();
+          return;
+        }
+
+        if (PROMO_CODES[code]) {
+          currentDiscount = PROMO_CODES[code];
+          appliedPromo = code;
+          promoHint.textContent = '✅ Промокод применён: скидка ' + currentDiscount + '%';
+          promoHint.className = 'promo-hint success';
+        } else {
+          currentDiscount = 0;
+          appliedPromo = '';
+          promoHint.textContent = '❌ Неверный промокод';
+          promoHint.className = 'promo-hint error';
+        }
+        updateSummary();
+      });
+
+      // Сброс промокода при ручном изменении поля
+      promoInput.addEventListener('input', () => {
+        if (appliedPromo && promoInput.value.trim().toUpperCase() !== appliedPromo) {
+          currentDiscount = 0;
+          appliedPromo = '';
+          promoHint.textContent = '';
+          promoHint.className = 'promo-hint';
+          updateSummary();
+        }
+      });
+
+      // ==== Выбор метода оплаты ====
+      paymentCards.forEach(card => {
+        card.addEventListener('click', () => {
+          paymentCards.forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+        });
+      });
+
+      // ==== Валидация формы ====
+      function validateForm() {
+        let isValid = true;
+
+        // Имя
+        const nameVal = userName.value.trim();
+        if (nameVal.length < 2) {
+          nameError.textContent = 'Введите имя (минимум 2 символа)';
+          userName.classList.add('error');
+          isValid = false;
+        } else {
+          nameError.textContent = '';
+          userName.classList.remove('error');
+        }
+
+        // Email
+        const emailVal = userEmail.value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailVal)) {
+          emailError.textContent = 'Введите корректный email';
+          userEmail.classList.add('error');
+          isValid = false;
+        } else {
+          emailError.textContent = '';
+          userEmail.classList.remove('error');
+        }
+
+        // Steam логин
+        const steamVal = steamLogin.value.trim();
+        if (steamVal.length < 2) {
+          steamError.textContent = 'Введите логин Steam (минимум 2 символа)';
+          steamLogin.classList.add('error');
+          isValid = false;
+        } else {
+          steamError.textContent = '';
+          steamLogin.classList.remove('error');
+        }
+
+        return isValid;
+      }
+
+      // Очистка ошибок при вводе
+      [userName, userEmail, steamLogin].forEach(input => {
+        input.addEventListener('input', () => {
+          input.classList.remove('error');
+          const errorEl = document.getElementById(input.id.replace('user', '').toLowerCase() + 'Error') ||
+                          document.getElementById(input.id === 'steamLogin' ? 'steamError' : input.id + 'Error');
+          if (errorEl) errorEl.textContent = '';
+        });
+      });
+
+      // ==== Кнопка оплаты ====
+      payButton.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        // Валидация формы
+        if (!validateForm()) {
+          const firstError = document.querySelector('.form-field input.error');
+          if (firstError) {
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            firstError.focus();
+          }
+          return;
+        }
+
+        // Сбор данных
+        const amount = parseFloat(amountInput.value) || 0;
+        const selectedMethod = document.querySelector('.payment-card.selected')?.dataset.method || 'card';
+        const methodNames = {
+          card: 'Банковская карта',
+          sbp: 'СБП',
+          wallet: 'ЮMoney',
+          crypto: 'Криптовалюта'
+        };
+
+        let finalAmount = amount;
+        let discountInfo = '';
+        if (currentDiscount > 0) {
+          finalAmount = amount - (amount * (currentDiscount / 100));
+          discountInfo = ` (скидка ${currentDiscount}% по промокоду ${appliedPromo})`;
+        }
+
+        // Формирование данных для отправки
+        const formData = {
+          store: 'Goodik Store',
+          name: userName.value.trim(),
+          email: userEmail.value.trim(),
+          steamLogin: steamLogin.value.trim(),
+          amount: amount,
+          finalAmount: finalAmount,
+          promo: appliedPromo || null,
+          discount: currentDiscount,
+          paymentMethod: selectedMethod
+        };
+
+        // Имитация отправки на сервер
+        console.log('Отправка данных в Goodik Store:', formData);
+
+        // Показ сообщения об успехе
+        const methodLabel = methodNames[selectedMethod];
+        successMessage.innerHTML = `
+          ✅ <strong>Заявка отправлена в Goodik Store!</strong><br>
+          <span style="color: #8b949e; font-size: 0.85rem; display: block; margin-top: 8px;">
+            Получатель: ${formData.steamLogin}<br>
+            Сумма: ${formatNumber(formData.finalAmount)} ₽${discountInfo}<br>
+            Способ оплаты: ${methodLabel}<br>
+            Уведомление отправлено на ${formData.email}
+          </span>
+        `;
+        successMessage.classList.add('visible');
+
+        // Прокрутка к сообщению
+        successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // Скрыть сообщение через 8 секунд
+        setTimeout(() => {
+          successMessage.classList.remove('visible');
+        }, 8000);
+      });
+
+      // ==== Инициализация ====
+      setAmount(1000);
+
+      // Обработка Enter в полях формы
+      [userName, userEmail, steamLogin].forEach(input => {
+        input.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            payButton.click();
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
