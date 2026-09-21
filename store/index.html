@@ -1162,39 +1162,20 @@
 
   <script>
     // ═══════════════════════════════════════════════════════════════
-    // 🔑 НАСТРОЙКА FORMSPREE
+    // 🔑 НАСТРОЙКА FORMSLIST
     // ═══════════════════════════════════════════════════════════════
-    // 1. Зарегистрируйтесь на https://formspree.io
-    // 2. Создайте новую форму (New Form)
-    // 3. Скопируйте ID формы (например, "xyzabcde")
-    // 4. Вставьте его ниже вместо 'YOUR_FORM_ID'
-    // 5. Письма с заказами будут приходить на почту, указанную при регистрации
+    // 1. Зарегистрируйтесь на https://formslist.com
+    // 2. Создайте форму или используйте instant provision
+    // 3. Скопируйте ваш уникальный endpoint (вида f/abc123)
+    // 4. Вставьте ниже вместо 'YOUR_FORM_HASH'
+    // 5. Уведомления придут на email, указанный при создании формы
     // ═══════════════════════════════════════════════════════════════
-    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mwlpvowa';
+    const FORMSLIST_ENDPOINT = 'https://formslist.com/f/lwaFYYAv-7hY';
+    // ═══════════════════════════════════════════════════════════════
 
     // ===== Данные товаров =====
     const products = [
-      //{ id: 1,  title: 'Пополнение Steam 1000 ₽',        category: 'STEAM',       price: 990,   oldPrice: 1100, rating: 4.9, reviews: 342, badge: 'hot',  gradient: ['#1b6ef3', '#0d4a9e'] },
-      //{ id: 2,  title: 'Steam Wallet 500 ₽',              category: 'STEAM',       price: 510,   oldPrice: null, rating: 4.8, reviews: 218, badge: null,   gradient: ['#2b8cff', '#1a5bbf'] },
-      //{ id: 3,  title: 'Cyberpunk 2077 (Steam)',          category: 'STEAM',       price: 1990,  oldPrice: 2990, rating: 4.7, reviews: 512, badge: 'sale', gradient: ['#f5c518', '#e08b00'] },
-      //{ id: 4,  title: 'PlayStation Plus 12 месяцев',     category: 'PLAYSTATION', price: 3490,  oldPrice: null, rating: 4.9, reviews: 189, badge: 'new',  gradient: ['#0070d1', '#00439c'] },
-      //{ id: 5,  title: 'Xbox Game Pass Ultimate 3 мес',   category: 'XBOX',        price: 2190,  oldPrice: 2700, rating: 4.8, reviews: 276, badge: 'hot',  gradient: ['#107c10', '#0a5209'] },
-      //{ id: 6,  title: 'Discord Nitro 1 месяц',           category: 'ПОДПИСКИ',    price: 590,   oldPrice: 750,  rating: 4.9, reviews: 421, badge: null,   gradient: ['#5865f2', '#3b45b8'] },
-      //{ id: 7,  title: 'Spotify Premium 3 месяца',        category: 'ПОДПИСКИ',    price: 890,   oldPrice: null, rating: 4.8, reviews: 334, badge: 'sale', gradient: ['#1db954', '#0f7a34'] },
-      //{ id: 8,  title: 'GTA V: Enhanced Edition',         category: 'STEAM',       price: 1490,  oldPrice: 2490, rating: 4.6, reviews: 789, badge: 'hot',  gradient: ['#f5a623', '#b8730a'] },
-      //{ id: 9,  title: 'Red Dead Redemption 2',           category: 'STEAM',       price: 2490,  oldPrice: 3490, rating: 5.0, reviews: 1024, badge: 'sale', gradient: ['#c0392b', '#7a1e14'] },
-      //{ id: 10, title: 'Fortnite 5000 V-Bucks',           category: 'ВАЛЮТА',      price: 3690,  oldPrice: null, rating: 4.7, reviews: 231, badge: null,   gradient: ['#9b59b6', '#5e2d7a'] },
-      //{ id: 11, title: 'Roblox 800 Robux',                category: 'ВАЛЮТА',      price: 890,   oldPrice: 990,  rating: 4.8, reviews: 445, badge: null,   gradient: ['#e74c3c', '#a0281c'] },
-      //{ id: 12, title: 'Minecraft: Java Edition',         category: 'STEAM',       price: 1690,  oldPrice: null, rating: 4.9, reviews: 1567, badge: 'hot', gradient: ['#7cb342', '#3d6b1e'] },
-      //{ id: 13, title: 'Nintendo Switch Online 12 мес',   category: 'ПОДПИСКИ',    price: 1990,  oldPrice: 2490, rating: 4.6, reviews: 98,  badge: 'new',  gradient: ['#e60012', '#8a0009'] },
-      //{ id: 14, title: 'Valorant 2050 VP',                category: 'ВАЛЮТА',      price: 1590,  oldPrice: null, rating: 4.7, reviews: 312, badge: null,   gradient: ['#ff4655', '#a02832'] },
-      //{ id: 15, title: 'Elden Ring (Steam)',              category: 'STEAM',       price: 2990,  oldPrice: 3990, rating: 4.9, reviews: 678, badge: 'sale', gradient: ['#b8860b', '#6e4f05'] },
-      //{ id: 16, title: 'YouTube Premium 3 месяца',        category: 'ПОДПИСКИ',    price: 690,   oldPrice: 890,  rating: 4.8, reviews: 256, badge: null,   gradient: ['#ff0000', '#a00000'] },
-      //{ id: 17, title: 'Call of Duty: MW III',            category: 'XBOX',        price: 3490,  oldPrice: 4490, rating: 4.5, reviews: 189, badge: 'hot',  gradient: ['#5c5c5c', '#2e2e2e'] },
-      //{ id: 18, title: 'FIFA 24 (EA FC 24)',              category: 'PLAYSTATION', price: 2790,  oldPrice: 3990, rating: 4.4, reviews: 402, badge: 'sale', gradient: ['#1a7f37', '#0d4a1f'] },
-      //{ id: 19, title: 'Terraria (Steam Key)',            category: 'КЛЮЧИ',       price: 490,   oldPrice: 690,  rating: 4.9, reviews: 890, badge: null,   gradient: ['#2b8cff', '#155ba8'] },
-      //{ id: 20, title: 'Among Us (Steam Key)',            category: 'КЛЮЧИ',       price: 290,   oldPrice: 390,  rating: 4.7, reviews: 1234, badge: 'hot', gradient: ['#e74c3c', '#a0281c'] },
-      { id: 21, title: 'Случайная игра в Steam (Steam Key)', category: 'STEAM',       price: 82,   oldPrice: null,  rating: 4.7, reviews: 1234, badge: 'null', gradient: ['#e74c3c', '#a0281c'] }
+      { id: 21, title: 'Случайная игра в Steam (Steam Key)', category: 'STEAM', price: 82, oldPrice: null, rating: 4.7, reviews: 1234, badge: null, gradient: ['#e74c3c', '#a0281c'] }
     ];
 
     const state = {
@@ -1431,7 +1412,7 @@
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 📝 ФОРМА ОФОРМЛЕНИЯ ЗАКАЗА С FORMSPREE
+    // 📝 ФОРМА ОФОРМЛЕНИЯ ЗАКАЗА
     // ═══════════════════════════════════════════════════════════════
     function openOrderForm() {
       const items = Object.entries(state.cart);
@@ -1517,7 +1498,7 @@
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // 📤 ОТПРАВКА ЧЕРЕЗ FORMSPREE
+    // 📤 ОТПРАВКА ЧЕРЕЗ FORMSLIST
     // ═══════════════════════════════════════════════════════════════
     async function handleOrderSubmit(e) {
       e.preventDefault();
@@ -1562,19 +1543,12 @@
       const orderNumber = generateOrderNumber();
       const total = getCartTotal();
 
-      // Формируем текстовый список товаров для письма
       const itemsText = items.map(i =>
         `• ${i.title} — ${i.quantity} шт. × ${formatPrice(i.price)} = ${formatPrice(i.subtotal)}`
       ).join('\n');
 
-      // Данные для Formspree
-      const formData = {
-        // Стандартные поля
-        name: nameVal,
-        email: emailVal,
-        _subject: `🛒 Новый заказ ${orderNumber} — Goodik Store`,
-
-        // Кастомные поля
+      // Данные для FormsList (JSON)
+      const payload = {
         order_number: orderNumber,
         order_date: new Date().toLocaleString('ru-RU'),
         customer_name: nameVal,
@@ -1582,29 +1556,27 @@
         total_items: items.reduce((s, i) => s + i.quantity, 0),
         total_price: formatPrice(total),
         order_items: itemsText,
-
-        // JSON для надёжности
         items_json: JSON.stringify(items),
         store: 'Goodik Store'
       };
 
-      // Показываем состояние загрузки
+      // Состояние загрузки
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span class="spinner"></span><span>Отправка...</span>';
 
       try {
-        // Проверка: если FORM_ID не заменён
-        if (FORMSPREE_ENDPOINT.includes('YOUR_FORM_ID')) {
-          throw new Error('FORMSPREE_NOT_CONFIGURED');
+        // Проверка: если hash не заменён
+        if (FORMSLIST_ENDPOINT.includes('YOUR_FORM_HASH')) {
+          throw new Error('FORMSLIST_NOT_CONFIGURED');
         }
 
-        const response = await fetch(FORMSPREE_ENDPOINT, {
+        const response = await fetch(FORMSLIST_ENDPOINT, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
-          body: JSON.stringify(formData)
+          body: JSON.stringify(payload)
         });
 
         if (!response.ok) {
@@ -1613,16 +1585,16 @@
         }
 
         // Успех!
-        console.log('✅ Заказ успешно отправлен через Formspree:', formData);
+        console.log('✅ Заказ успешно отправлен через FormsList:', payload);
         showSuccessScreen(orderNumber, emailVal, nameVal, total);
         showToast(`📧 Заказ ${orderNumber} отправлен!`, 'success');
 
       } catch (err) {
         console.error('❌ Ошибка отправки:', err);
 
-        if (err.message === 'FORMSPREE_NOT_CONFIGURED') {
-          // Демо-режим: показываем данные в консоли
-          console.log('⚠️ FORMSPREE НЕ НАСТРОЕН. Данные заказа:');
+        if (err.message === 'FORMSLIST_NOT_CONFIGURED') {
+          // Демо-режим
+          console.log('⚠️ FORMSLIST НЕ НАСТРОЕН. Данные заказа:');
           console.log('─'.repeat(50));
           console.log('Номер заказа:', orderNumber);
           console.log('Имя:', nameVal);
@@ -1632,15 +1604,14 @@
           console.log('Итого:', formatPrice(total));
           console.log('─'.repeat(50));
           console.log('💡 Чтобы включить реальную отправку:');
-          console.log('1. Зайдите на https://formspree.io');
-          console.log('2. Создайте форму и получите Form ID');
-          console.log('3. Замените YOUR_FORM_ID в коде на ваш ID');
+          console.log('1. Зайдите на https://formslist.com');
+          console.log('2. Создайте форму или instant provision');
+          console.log('3. Скопируйте ваш hash (вида f/abc123)');
+          console.log('4. Замените YOUR_FORM_HASH в коде на ваш hash');
 
-          // Показываем успех (демо)
           showSuccessScreen(orderNumber, emailVal, nameVal, total, true);
-          showToast('⚠️ Демо-режим: настройте Formspree', 'info');
+          showToast('⚠️ Демо-режим: настройте FormsList', 'info');
         } else {
-          // Показываем ошибку
           const errorBox = document.createElement('div');
           errorBox.className = 'error-box';
           errorBox.innerHTML = `
@@ -1670,8 +1641,8 @@
           <div class="order-number">${orderNumber}</div>
           ${isDemo ? `
             <p style="font-size:0.8rem;color:#d29922;margin-top:16px;">
-              ⚠️ Formspree не настроен — данные выведены в консоль.<br>
-              Замените YOUR_FORM_ID в коде на реальный ID формы.
+              ⚠️ FormsList не настроен — данные выведены в консоль.<br>
+              Замените YOUR_FORM_HASH в коде на реальный hash формы.
             </p>
           ` : `
             <p style="font-size:0.8rem;color:#484f58;margin-top:16px;">
