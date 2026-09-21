@@ -5,694 +5,94 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Goodik — Steam Boost (By Goodik Store)</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: #0b0e14;
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      color: #e6edf3;
-      line-height: 1.5;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .glass {
-      background: rgba(22, 27, 34, 0.75);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid #2d333b;
-      border-radius: 24px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
-    }
-
-    /* Шапка */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 32px;
-      border-bottom: 1px solid #1e242c;
-      background: rgba(11, 14, 20, 0.8);
-      backdrop-filter: blur(10px);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 700;
-      font-size: 1.4rem;
-      letter-spacing: -0.5px;
-    }
-
-    .logo-icon {
-      background: linear-gradient(135deg, #1b6ef3, #2b8cff);
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      box-shadow: 0 0 15px rgba(27, 110, 243, 0.5);
-      flex-shrink: 0;
-    }
-
-    .logo-text {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.15;
-    }
-
-    .logo-text .brand {
-      background: linear-gradient(to right, #ffffff, #a0c0ff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      font-size: 1.25rem;
-      font-weight: 700;
-    }
-
-    .logo-text .sub {
-      font-size: 0.7rem;
-      color: #6e7681;
-      font-weight: 500;
-      letter-spacing: 0.4px;
-      text-transform: uppercase;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 28px;
-      font-size: 0.95rem;
-      font-weight: 500;
-      color: #8b949e;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: inherit;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover {
-      color: #ffffff;
-    }
-
-    .btn-support {
-      background: #21262d;
-      border: 1px solid #30363d;
-      color: #e6edf3;
-      padding: 8px 18px;
-      border-radius: 40px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-support:hover {
-      background: #30363d;
-      border-color: #8b949e;
-    }
-
-    /* Основной контент */
-    .main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
-    }
-
-    .card {
-      max-width: 1000px;
-      width: 100%;
-      padding: 40px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-    }
-
-    .info-section h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      line-height: 1.2;
-      margin-bottom: 16px;
-      background: linear-gradient(135deg, #ffffff 0%, #b0caff 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .info-section p {
-      color: #8b949e;
-      margin-bottom: 32px;
-      font-size: 1.1rem;
-    }
-
-    .features {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      margin-bottom: 40px;
-    }
-
-    .feature-item {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .feature-icon {
-      background: #1c2129;
-      border-radius: 12px;
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #2d333b;
-      color: #2b8cff;
-      font-size: 20px;
-      flex-shrink: 0;
-    }
-
-    .feature-text {
-      font-weight: 500;
-    }
-
-    .feature-text small {
-      display: block;
-      color: #6e7681;
-      font-size: 0.85rem;
-      font-weight: 400;
-      margin-top: 2px;
-    }
-
-    .trust-badge {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      padding-top: 16px;
-      border-top: 1px solid #1e242c;
-      color: #6e7681;
-      font-size: 0.9rem;
-      flex-wrap: wrap;
-    }
-
-    .trust-badge span {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .form-section {
-      background: #0f131a;
-      border-radius: 20px;
-      padding: 28px 24px;
-      border: 1px solid #1e242c;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    .form-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .form-sub {
-      color: #8b949e;
-      font-size: 0.95rem;
-      margin-bottom: 24px;
-    }
-
-    .quick-amounts {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 22px;
-    }
-
-    .amount-btn {
-      background: #1a1f28;
-      border: 1px solid #2d333b;
-      color: #e6edf3;
-      padding: 10px 16px;
-      border-radius: 30px;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.15s;
-      flex: 1 0 auto;
-      font-family: inherit;
-    }
-
-    .amount-btn:hover {
-      background: #232a33;
-      border-color: #3d444d;
-    }
-
-    .amount-btn.active {
-      background: #1b6ef3;
-      border-color: #1b6ef3;
-      color: white;
-      box-shadow: 0 0 15px rgba(27, 110, 243, 0.4);
-    }
-
-    .input-group {
-      position: relative;
-      margin-bottom: 22px;
-    }
-
-    .input-group label {
-      display: block;
-      font-size: 0.85rem;
-      color: #8b949e;
-      margin-bottom: 8px;
-      font-weight: 500;
-      letter-spacing: 0.3px;
-    }
-
-    .input-wrapper {
-      display: flex;
-      align-items: center;
-      background: #1a1f28;
-      border: 1px solid #2d333b;
-      border-radius: 14px;
-      padding: 0 16px;
-      transition: border 0.2s, box-shadow 0.2s;
-    }
-
-    .input-wrapper:focus-within {
-      border-color: #1b6ef3;
-      box-shadow: 0 0 0 3px rgba(27, 110, 243, 0.2);
-    }
-
-    .currency-symbol {
-      color: #8b949e;
-      font-size: 1.2rem;
-      font-weight: 500;
-      margin-right: 8px;
-    }
-
-    .input-wrapper input {
-      width: 100%;
-      background: transparent;
-      border: none;
-      padding: 16px 0;
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: white;
-      outline: none;
-      font-family: inherit;
-    }
-
-    .input-wrapper input::placeholder {
-      color: #484f58;
-      font-weight: 400;
-    }
-
-    .slider-container {
-      margin-bottom: 24px;
-    }
-
-    .slider-labels {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-      font-size: 0.85rem;
-      color: #8b949e;
-    }
-
-    input[type="range"] {
-      width: 100%;
-      height: 6px;
-      -webkit-appearance: none;
-      appearance: none;
-      background: #1a1f28;
-      border-radius: 10px;
-      outline: none;
-      border: 1px solid #2d333b;
-      cursor: pointer;
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #1b6ef3, #2b8cff);
-      border: 2px solid #0f131a;
-      box-shadow: 0 0 12px rgba(27, 110, 243, 0.6);
-      cursor: pointer;
-      transition: transform 0.15s;
-    }
-
-    input[type="range"]::-webkit-slider-thumb:hover {
-      transform: scale(1.1);
-    }
-
-    input[type="range"]::-moz-range-thumb {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #1b6ef3, #2b8cff);
-      border: 2px solid #0f131a;
-      box-shadow: 0 0 12px rgba(27, 110, 243, 0.6);
-      cursor: pointer;
-    }
-
-    .promo-group {
-      display: flex;
-      gap: 10px;
-    }
-
-    .promo-input {
-      flex: 1;
-      background: #1a1f28;
-      border: 1px solid #2d333b;
-      border-radius: 14px;
-      padding: 14px 16px;
-      color: white;
-      font-size: 0.95rem;
-      outline: none;
-      transition: border 0.2s, box-shadow 0.2s;
-      text-transform: uppercase;
-      min-width: 0;
-      font-family: inherit;
-    }
-
-    .promo-input::placeholder {
-      color: #484f58;
-      text-transform: none;
-    }
-
-    .promo-input:focus {
-      border-color: #1b6ef3;
-      box-shadow: 0 0 0 3px rgba(27, 110, 243, 0.2);
-    }
-
-    .promo-btn {
-      background: #1a1f28;
-      border: 1px solid #2d333b;
-      color: #e6edf3;
-      padding: 0 20px;
-      border-radius: 14px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
-      font-family: inherit;
-    }
-
-    .promo-btn:hover {
-      background: #232a33;
-      border-color: #3d444d;
-    }
-
-    .promo-btn:active {
-      background: #1b6ef3;
-      border-color: #1b6ef3;
-    }
-
-    .promo-hint {
-      font-size: 0.75rem;
-      color: #484f58;
-      margin-top: 6px;
-      min-height: 16px;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0b0e14; font-family: 'Inter', system-ui, sans-serif; color: #e6edf3; line-height: 1.5; min-height: 100vh; display: flex; flex-direction: column; }
+    .glass { background: rgba(22, 27, 34, 0.75); backdrop-filter: blur(12px); border: 1px solid #2d333b; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+    .header { display: flex; justify-content: space-between; align-items: center; padding: 20px 32px; border-bottom: 1px solid #1e242c; background: rgba(11,14,20,0.8); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 10; }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { background: linear-gradient(135deg, #1b6ef3, #2b8cff); width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 0 15px rgba(27,110,243,0.5); flex-shrink: 0; }
+    .logo-text { display: flex; flex-direction: column; line-height: 1.15; }
+    .logo-text .brand { background: linear-gradient(to right, #ffffff, #a0c0ff); -webkit-background-clip: text; background-clip: text; color: transparent; font-size: 1.25rem; font-weight: 700; }
+    .logo-text .sub { font-size: 0.7rem; color: #6e7681; font-weight: 500; letter-spacing: 0.4px; text-transform: uppercase; }
+    .nav-links { display: flex; gap: 28px; font-size: 0.95rem; font-weight: 500; color: #8b949e; }
+    .nav-links a { text-decoration: none; color: inherit; transition: color 0.2s; }
+    .nav-links a:hover { color: #ffffff; }
+    .btn-support { background: #21262d; border: 1px solid #30363d; color: #e6edf3; padding: 8px 18px; border-radius: 40px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+    .btn-support:hover { background: #30363d; border-color: #8b949e; }
+    .main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+    .card { max-width: 1000px; width: 100%; padding: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+    .info-section h1 { font-size: 2.5rem; font-weight: 700; line-height: 1.2; margin-bottom: 16px; background: linear-gradient(135deg, #ffffff 0%, #b0caff 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .info-section p { color: #8b949e; margin-bottom: 32px; font-size: 1.1rem; }
+    .features { display: flex; flex-direction: column; gap: 18px; margin-bottom: 40px; }
+    .feature-item { display: flex; align-items: center; gap: 14px; }
+    .feature-icon { background: #1c2129; border-radius: 12px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: 1px solid #2d333b; color: #2b8cff; font-size: 20px; flex-shrink: 0; }
+    .feature-text { font-weight: 500; }
+    .feature-text small { display: block; color: #6e7681; font-size: 0.85rem; font-weight: 400; margin-top: 2px; }
+    .trust-badge { display: flex; align-items: center; gap: 20px; padding-top: 16px; border-top: 1px solid #1e242c; color: #6e7681; font-size: 0.9rem; flex-wrap: wrap; }
+    .trust-badge span { display: flex; align-items: center; gap: 6px; }
+    .form-section { background: #0f131a; border-radius: 20px; padding: 28px 24px; border: 1px solid #1e242c; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .form-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 8px; }
+    .form-sub { color: #8b949e; font-size: 0.95rem; margin-bottom: 24px; }
+    .quick-amounts { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
+    .amount-btn { background: #1a1f28; border: 1px solid #2d333b; color: #e6edf3; padding: 10px 16px; border-radius: 30px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.15s; flex: 1 0 auto; font-family: inherit; }
+    .amount-btn:hover { background: #232a33; border-color: #3d444d; }
+    .amount-btn.active { background: #1b6ef3; border-color: #1b6ef3; color: white; box-shadow: 0 0 15px rgba(27,110,243,0.4); }
+    .input-group { position: relative; margin-bottom: 22px; }
+    .input-group label { display: block; font-size: 0.85rem; color: #8b949e; margin-bottom: 8px; font-weight: 500; }
+    .input-wrapper { display: flex; align-items: center; background: #1a1f28; border: 1px solid #2d333b; border-radius: 14px; padding: 0 16px; transition: border 0.2s, box-shadow 0.2s; }
+    .input-wrapper:focus-within { border-color: #1b6ef3; box-shadow: 0 0 0 3px rgba(27,110,243,0.2); }
+    .currency-symbol { color: #8b949e; font-size: 1.2rem; font-weight: 500; margin-right: 8px; }
+    .input-wrapper input { width: 100%; background: transparent; border: none; padding: 16px 0; font-size: 1.2rem; font-weight: 600; color: white; outline: none; font-family: inherit; }
+    .input-wrapper input::placeholder { color: #484f58; font-weight: 400; }
+    .slider-container { margin-bottom: 24px; }
+    .slider-labels { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85rem; color: #8b949e; }
+    input[type="range"] { width: 100%; height: 6px; -webkit-appearance: none; appearance: none; background: #1a1f28; border-radius: 10px; outline: none; border: 1px solid #2d333b; cursor: pointer; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, #1b6ef3, #2b8cff); border: 2px solid #0f131a; box-shadow: 0 0 12px rgba(27,110,243,0.6); cursor: pointer; }
+    input[type="range"]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, #1b6ef3, #2b8cff); border: 2px solid #0f131a; cursor: pointer; }
+    .promo-group { display: flex; gap: 10px; }
+    .promo-input { flex: 1; background: #1a1f28; border: 1px solid #2d333b; border-radius: 14px; padding: 14px 16px; color: white; font-size: 0.95rem; outline: none; text-transform: uppercase; min-width: 0; font-family: inherit; }
+    .promo-input::placeholder { color: #484f58; text-transform: none; }
+    .promo-input:focus { border-color: #1b6ef3; box-shadow: 0 0 0 3px rgba(27,110,243,0.2); }
+    .promo-btn { background: #1a1f28; border: 1px solid #2d333b; color: #e6edf3; padding: 0 20px; border-radius: 14px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; font-family: inherit; }
+    .promo-btn:hover { background: #232a33; border-color: #3d444d; }
+    .promo-hint { font-size: 0.75rem; color: #484f58; margin-top: 6px; min-height: 16px; }
     .promo-hint.success { color: #3fb950; }
     .promo-hint.error { color: #f85149; }
-
-    .payment-methods {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-
-    .payment-card {
-      background: #1a1f28;
-      border: 1px solid #2d333b;
-      border-radius: 14px;
-      padding: 14px 12px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .payment-card:hover {
-      background: #21262e;
-      border-color: #3d444d;
-    }
-
-    .payment-card.selected {
-      border-color: #1b6ef3;
-      background: #17223b;
-      box-shadow: 0 0 0 1px #1b6ef3;
-    }
-
-    .payment-icon {
-      font-size: 1.6rem;
-      line-height: 1;
-    }
-
-    .payment-info {
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-
-    .payment-info small {
-      display: block;
-      color: #6e7681;
-      font-size: 0.75rem;
-      font-weight: 400;
-    }
-
-    .summary {
-      background: #0b0e14;
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 24px;
-      border: 1px solid #1e242c;
-    }
-
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.95rem;
-      margin-bottom: 8px;
-      color: #8b949e;
-    }
-
-    .summary-row.total {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: white;
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid #2d333b;
-      margin-bottom: 0;
-    }
-
-    .summary-row.total .amount {
-      color: #2b8cff;
-    }
-
-    .section-divider {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 28px 0 20px;
-      color: #6e7681;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 600;
-    }
-
-    .section-divider::before,
-    .section-divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #1e242c;
-    }
-
-    .user-form {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .form-field {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .form-field label {
-      font-size: 0.85rem;
-      color: #8b949e;
-      margin-bottom: 8px;
-      font-weight: 500;
-    }
-
+    .payment-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+    .payment-card { background: #1a1f28; border: 1px solid #2d333b; border-radius: 14px; padding: 14px 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.2s; }
+    .payment-card:hover { background: #21262e; border-color: #3d444d; }
+    .payment-card.selected { border-color: #1b6ef3; background: #17223b; box-shadow: 0 0 0 1px #1b6ef3; }
+    .payment-icon { font-size: 1.6rem; line-height: 1; }
+    .payment-info { font-weight: 500; font-size: 0.95rem; }
+    .payment-info small { display: block; color: #6e7681; font-size: 0.75rem; font-weight: 400; }
+    .summary { background: #0b0e14; border-radius: 16px; padding: 16px; margin-bottom: 24px; border: 1px solid #1e242c; }
+    .summary-row { display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 8px; color: #8b949e; }
+    .summary-row.total { font-size: 1.3rem; font-weight: 700; color: white; margin-top: 12px; padding-top: 12px; border-top: 1px solid #2d333b; margin-bottom: 0; }
+    .summary-row.total .amount { color: #2b8cff; }
+    .section-divider { display: flex; align-items: center; gap: 12px; margin: 28px 0 20px; color: #6e7681; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+    .section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: #1e242c; }
+    .user-form { display: flex; flex-direction: column; gap: 16px; }
+    .form-field { display: flex; flex-direction: column; }
+    .form-field label { font-size: 0.85rem; color: #8b949e; margin-bottom: 8px; font-weight: 500; }
     .form-field label .required { color: #f85149; }
-
-    .form-field input {
-      background: #1a1f28;
-      border: 1px solid #2d333b;
-      border-radius: 14px;
-      padding: 14px 16px;
-      color: white;
-      font-size: 0.95rem;
-      outline: none;
-      transition: border 0.2s, box-shadow 0.2s;
-      font-family: inherit;
-    }
-
-    .form-field input::placeholder {
-      color: #484f58;
-    }
-
-    .form-field input:focus {
-      border-color: #1b6ef3;
-      box-shadow: 0 0 0 3px rgba(27, 110, 243, 0.2);
-    }
-
-    .form-field input.error {
-      border-color: #f85149;
-      box-shadow: 0 0 0 3px rgba(248, 81, 73, 0.15);
-    }
-
-    .form-field .field-error {
-      font-size: 0.75rem;
-      color: #f85149;
-      margin-top: 4px;
-      min-height: 14px;
-    }
-
-    .btn-pay {
-      width: 100%;
-      background: linear-gradient(135deg, #1b6ef3, #2b8cff);
-      border: none;
-      border-radius: 16px;
-      padding: 18px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: white;
-      cursor: pointer;
-      transition: all 0.2s;
-      box-shadow: 0 8px 20px rgba(27, 110, 243, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 20px;
-      font-family: inherit;
-    }
-
-    .btn-pay:hover:not(:disabled) {
-      background: linear-gradient(135deg, #2b7af0, #3d97ff);
-      box-shadow: 0 12px 28px rgba(27, 110, 243, 0.45);
-      transform: translateY(-1px);
-    }
-
-    .btn-pay:active:not(:disabled) {
-      transform: translateY(1px);
-      box-shadow: 0 4px 12px rgba(27, 110, 243, 0.3);
-    }
-
-    .btn-pay:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .btn-pay .spinner {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
+    .form-field input { background: #1a1f28; border: 1px solid #2d333b; border-radius: 14px; padding: 14px 16px; color: white; font-size: 0.95rem; outline: none; transition: border 0.2s, box-shadow 0.2s; font-family: inherit; }
+    .form-field input::placeholder { color: #484f58; }
+    .form-field input:focus { border-color: #1b6ef3; box-shadow: 0 0 0 3px rgba(27,110,243,0.2); }
+    .form-field input.error { border-color: #f85149; box-shadow: 0 0 0 3px rgba(248,81,73,0.15); }
+    .form-field .field-error { font-size: 0.75rem; color: #f85149; margin-top: 4px; min-height: 14px; }
+    .btn-pay { width: 100%; background: linear-gradient(135deg, #1b6ef3, #2b8cff); border: none; border-radius: 16px; padding: 18px; font-size: 1.1rem; font-weight: 700; color: white; cursor: pointer; transition: all 0.2s; box-shadow: 0 8px 20px rgba(27,110,243,0.3); display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 20px; font-family: inherit; }
+    .btn-pay:hover:not(:disabled) { background: linear-gradient(135deg, #2b7af0, #3d97ff); box-shadow: 0 12px 28px rgba(27,110,243,0.45); transform: translateY(-1px); }
+    .btn-pay:active:not(:disabled) { transform: translateY(1px); }
+    .btn-pay:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .btn-pay .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    .disclaimer {
-      text-align: center;
-      color: #484f58;
-      font-size: 0.75rem;
-      margin-top: 12px;
-    }
-
-    .success-message {
-      display: none;
-      background: rgba(63, 185, 80, 0.1);
-      border: 1px solid #3fb950;
-      border-radius: 14px;
-      padding: 16px;
-      margin-top: 16px;
-      color: #3fb950;
-      font-size: 0.9rem;
-      text-align: center;
-      line-height: 1.6;
-    }
-
+    .disclaimer { text-align: center; color: #484f58; font-size: 0.75rem; margin-top: 12px; line-height: 1.5; }
+    .success-message { display: none; background: rgba(63,185,80,0.1); border: 1px solid #3fb950; border-radius: 14px; padding: 16px; margin-top: 16px; color: #3fb950; font-size: 0.9rem; text-align: center; line-height: 1.6; }
     .success-message.visible { display: block; }
-
-    .error-message {
-      display: none;
-      background: rgba(248, 81, 73, 0.1);
-      border: 1px solid #f85149;
-      border-radius: 14px;
-      padding: 16px;
-      margin-top: 16px;
-      color: #f85149;
-      font-size: 0.9rem;
-      text-align: center;
-      line-height: 1.6;
-    }
-
+    .error-message { display: none; background: rgba(248,81,73,0.1); border: 1px solid #f85149; border-radius: 14px; padding: 16px; margin-top: 16px; color: #f85149; font-size: 0.9rem; text-align: center; line-height: 1.6; }
     .error-message.visible { display: block; }
-
-    @media (max-width: 860px) {
-      .card {
-        grid-template-columns: 1fr;
-        padding: 24px;
-        gap: 32px;
-      }
-      .header { padding: 16px 20px; }
-      .nav-links { display: none; }
-      .info-section h1 { font-size: 2rem; }
-    }
-
-    @media (max-width: 480px) {
-      .card { padding: 16px; }
-      .form-section { padding: 20px 16px; }
-      .payment-methods { grid-template-columns: 1fr; }
-      .quick-amounts .amount-btn { flex: 1 0 30%; }
-      .promo-group { flex-direction: column; }
-      .promo-btn { padding: 14px; }
-      .logo-text .brand { font-size: 1.05rem; }
-      .logo-text .sub { font-size: 0.6rem; }
-    }
+    @media (max-width: 860px) { .card { grid-template-columns: 1fr; padding: 24px; gap: 32px; } .header { padding: 16px 20px; } .nav-links { display: none; } .info-section h1 { font-size: 2rem; } }
+    @media (max-width: 480px) { .card { padding: 16px; } .form-section { padding: 20px 16px; } .payment-methods { grid-template-columns: 1fr; } .quick-amounts .amount-btn { flex: 1 0 30%; } .promo-group { flex-direction: column; } .promo-btn { padding: 14px; } }
   </style>
 </head>
 <body>
@@ -714,47 +114,33 @@
 
   <main class="main">
     <div class="card glass">
-      <!-- Левая колонка: информация -->
       <div class="info-section">
         <h1>Пополнение Steam<br>за 30 секунд</h1>
         <p>Безопасно, выгодно и без комиссии. Зачисление на кошелёк моментально.</p>
-
         <div class="features">
           <div class="feature-item">
             <div class="feature-icon">🔒</div>
-            <div class="feature-text">
-              Безопасные платежи
-              <small>Шифрование и защита данных</small>
-            </div>
+            <div class="feature-text">Безопасные платежи<small>Шифрование и защита данных</small></div>
           </div>
           <div class="feature-item">
             <div class="feature-icon">⚡</div>
-            <div class="feature-text">
-              Мгновенное зачисление
-              <small>Средства приходят сразу</small>
-            </div>
+            <div class="feature-text">Мгновенное зачисление<small>Средства приходят сразу</small></div>
           </div>
           <div class="feature-item">
             <div class="feature-icon">💰</div>
-            <div class="feature-text">
-              Без скрытых комиссий
-              <small>Вы платите ровно столько, сколько указали</small>
-            </div>
+            <div class="feature-text">Без скрытых комиссий<small>Вы платите ровно столько, сколько указали</small></div>
           </div>
         </div>
-
         <div class="trust-badge">
           <span>✅ 50 000+ операций</span>
           <span>⭐ 4.9 / 5</span>
         </div>
       </div>
 
-      <!-- Правая колонка: форма -->
       <div class="form-section">
         <div class="form-title">Пополнить кошелёк</div>
         <div class="form-sub">Выберите сумму и способ оплаты</div>
 
-        <!-- Быстрые суммы -->
         <div class="quick-amounts">
           <button class="amount-btn" data-amount="100">100 ₽</button>
           <button class="amount-btn" data-amount="300">300 ₽</button>
@@ -762,7 +148,6 @@
           <button class="amount-btn active" data-amount="1000">1 000 ₽</button>
         </div>
 
-        <!-- Ввод суммы -->
         <div class="input-group">
           <label>Сумма пополнения</label>
           <div class="input-wrapper">
@@ -771,16 +156,11 @@
           </div>
         </div>
 
-        <!-- Слайдер -->
         <div class="slider-container">
-          <div class="slider-labels">
-            <span>10 ₽</span>
-            <span>1 000 ₽</span>
-          </div>
+          <div class="slider-labels"><span>10 ₽</span><span>1 000 ₽</span></div>
           <input type="range" id="amountSlider" min="10" max="1000" step="10" value="1000">
         </div>
 
-        <!-- Промокод -->
         <div class="input-group">
           <label>Промокод (если есть)</label>
           <div class="promo-group">
@@ -790,76 +170,48 @@
           <div class="promo-hint" id="promoHint"></div>
         </div>
 
-        <!-- Методы оплаты -->
         <label style="display: block; font-size: 0.85rem; color: #8b949e; margin-bottom: 10px; font-weight: 500;">Способ оплаты</label>
         <div class="payment-methods">
           <div class="payment-card selected" data-method="card">
             <div class="payment-icon">💳</div>
-            <div class="payment-info">
-              Банковская карта
-              <small>Visa, MasterCard, МИР</small>
-            </div>
+            <div class="payment-info">Банковская карта<small>Visa, MasterCard, МИР</small></div>
           </div>
           <div class="payment-card" data-method="sbp">
             <div class="payment-icon">📱</div>
-            <div class="payment-info">
-              СБП
-              <small>По номеру телефона</small>
-            </div>
+            <div class="payment-info">СБП<small>По номеру телефона</small></div>
           </div>
           <div class="payment-card" data-method="wallet">
             <div class="payment-icon">👛</div>
-            <div class="payment-info">
-              ЮMoney
-              <small>Кошелёк</small>
-            </div>
+            <div class="payment-info">ЮMoney<small>Кошелёк</small></div>
           </div>
           <div class="payment-card" data-method="crypto">
             <div class="payment-icon">₿</div>
-            <div class="payment-info">
-              Криптовалюта
-              <small>USDT, BTC, ETH</small>
-            </div>
+            <div class="payment-info">Криптовалюта<small>USDT, BTC, ETH</small></div>
           </div>
         </div>
 
-        <!-- Итог -->
         <div class="summary">
-          <div class="summary-row">
-            <span>Сумма пополнения</span>
-            <span id="summaryAmount">1 000 ₽</span>
-          </div>
+          <div class="summary-row"><span>Сумма пополнения</span><span id="summaryAmount">1 000 ₽</span></div>
           <div class="summary-row" id="discountRow" style="display: none; color: #3fb950;">
-            <span>Скидка по промокоду</span>
-            <span id="discountAmount">−0 ₽</span>
+            <span>Скидка по промокоду</span><span id="discountAmount">−0 ₽</span>
           </div>
-          <div class="summary-row">
-            <span>Комиссия</span>
-            <span style="color: #3fb950;">0 ₽</span>
-          </div>
-          <div class="summary-row total">
-            <span>К оплате</span>
-            <span class="amount" id="totalAmount">1 000 ₽</span>
-          </div>
+          <div class="summary-row"><span>Комиссия</span><span style="color: #3fb950;">0 ₽</span></div>
+          <div class="summary-row total"><span>К оплате</span><span class="amount" id="totalAmount">1 000 ₽</span></div>
         </div>
 
-        <!-- Разделитель -->
         <div class="section-divider">Данные получателя</div>
 
-        <!-- Форма данных пользователя -->
         <form class="user-form" id="userForm" novalidate>
           <div class="form-field">
             <label for="userName">Ваше имя <span class="required">*</span></label>
             <input type="text" id="userName" name="name" placeholder="Иван Иванов" required>
             <div class="field-error" id="nameError"></div>
           </div>
-
           <div class="form-field">
             <label for="userEmail">Электронная почта <span class="required">*</span></label>
             <input type="email" id="userEmail" name="email" placeholder="ivan@example.com" required>
             <div class="field-error" id="emailError"></div>
           </div>
-
           <div class="form-field">
             <label for="steamLogin">Логин Steam <span class="required">*</span></label>
             <input type="text" id="steamLogin" name="steam_login" placeholder="Ваш логин в Steam" required>
@@ -867,16 +219,12 @@
           </div>
         </form>
 
-        <!-- Кнопка -->
         <button class="btn-pay" id="payButton">
           <span>Перейти к оплате</span>
           <span>→</span>
         </button>
-        <div class="disclaimer">
-          Нажимая кнопку, вы соглашаетесь с условиями сервиса Goodik Store
-        </div>
+        <div class="disclaimer">Нажимая кнопку, вы соглашаетесь с условиями сервиса Goodik Store</div>
 
-        <!-- Сообщения -->
         <div class="success-message" id="successMessage"></div>
         <div class="error-message" id="errorMessage"></div>
       </div>
@@ -885,13 +233,18 @@
 
   <script>
     // ═══════════════════════════════════════════════════════════════
-    // 🔑 НАСТРОЙКА FORMSPREE
+    // 🔑 НАСТРОЙКА FORMSLIST
     // ═══════════════════════════════════════════════════════════════
-    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mwlpvowa';
+    // 1. Зарегистрируйтесь на https://formslist.com
+    // 2. Создайте форму (или используйте instant_provision)
+    // 3. Скопируйте ваш уникальный endpoint (например, f/abc123)
+    // 4. Вставьте ниже вместо 'YOUR_FORM_HASH'
+    // 5. Уведомления придут на email, указанный при создании формы
+    // ═══════════════════════════════════════════════════════════════
+    const FORMSLIST_ENDPOINT = 'https://formslist.com/f/lwaFYYAv-7hY';
     // ═══════════════════════════════════════════════════════════════
 
     (function() {
-      // ==== Элементы ====
       const amountInput = document.getElementById('amountInput');
       const amountSlider = document.getElementById('amountSlider');
       const quickButtons = document.querySelectorAll('.amount-btn');
@@ -907,7 +260,6 @@
       const successMessage = document.getElementById('successMessage');
       const errorMessage = document.getElementById('errorMessage');
 
-      // Поля формы
       const userName = document.getElementById('userName');
       const userEmail = document.getElementById('userEmail');
       const steamLogin = document.getElementById('steamLogin');
@@ -915,50 +267,28 @@
       const emailError = document.getElementById('emailError');
       const steamError = document.getElementById('steamError');
 
-      // ==== Константы ====
       const MIN_AMOUNT = 10;
       const MAX_AMOUNT = 1000;
-
-      const PROMO_CODES = {
-        'STEAM10': 10,
-        'BOOST15': 15,
-        'WELCOME5': 5,
-        'SUPER20': 20,
-        'GOODIK10': 10
-      };
+      const PROMO_CODES = { 'STEAM10': 10, 'BOOST15': 15, 'WELCOME5': 5, 'SUPER20': 20, 'GOODIK10': 10 };
 
       let currentDiscount = 0;
       let appliedPromo = '';
 
-      // ==== Утилиты ====
-      function formatNumber(num) {
-        return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-      }
+      function formatNumber(num) { return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+      function clamp(value, min, max) { return Math.min(Math.max(value, min), max); }
+      function generateOrderNumber() { return 'SB-' + Date.now().toString().slice(-8) + '-' + Math.random().toString(36).slice(2, 6).toUpperCase(); }
 
-      function clamp(value, min, max) {
-        return Math.min(Math.max(value, min), max);
-      }
-
-      function generateOrderNumber() {
-        return 'SB-' + Date.now().toString().slice(-8) + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
-      }
-
-      // ==== Обновление итогов ====
       function updateSummary() {
         let amount = parseFloat(amountInput.value);
         if (isNaN(amount)) amount = MIN_AMOUNT;
         amount = clamp(amount, MIN_AMOUNT, MAX_AMOUNT);
-
         amountSlider.value = amount;
-
         quickButtons.forEach(btn => {
           const btnAmount = parseFloat(btn.dataset.amount);
           btn.classList.toggle('active', btnAmount === amount);
         });
-
         const baseFormatted = formatNumber(amount) + ' ₽';
         summaryAmount.textContent = baseFormatted;
-
         if (currentDiscount > 0) {
           const discountValue = amount * (currentDiscount / 100);
           const finalAmount = amount - discountValue;
@@ -977,57 +307,30 @@
         updateSummary();
       }
 
-      // ==== Обработчики суммы ====
-      amountInput.addEventListener('input', () => {
-        let val = parseFloat(amountInput.value);
-        if (isNaN(val)) return;
-        updateSummary();
-      });
-
+      amountInput.addEventListener('input', () => { if (isNaN(parseFloat(amountInput.value))) return; updateSummary(); });
       amountInput.addEventListener('blur', () => {
         let val = parseFloat(amountInput.value);
-        if (isNaN(val) || val < MIN_AMOUNT) {
-          amountInput.value = MIN_AMOUNT;
-        } else if (val > MAX_AMOUNT) {
-          amountInput.value = MAX_AMOUNT;
-        }
+        if (isNaN(val) || val < MIN_AMOUNT) amountInput.value = MIN_AMOUNT;
+        else if (val > MAX_AMOUNT) amountInput.value = MAX_AMOUNT;
         updateSummary();
       });
+      amountSlider.addEventListener('input', (e) => { amountInput.value = parseFloat(e.target.value); updateSummary(); });
+      quickButtons.forEach(btn => { btn.addEventListener('click', () => setAmount(parseFloat(btn.dataset.amount))); });
 
-      amountSlider.addEventListener('input', (e) => {
-        const val = parseFloat(e.target.value);
-        amountInput.value = val;
-        updateSummary();
-      });
-
-      quickButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const amount = parseFloat(btn.dataset.amount);
-          setAmount(amount);
-        });
-      });
-
-      // ==== Промокод ====
       applyPromoBtn.addEventListener('click', () => {
         const code = promoInput.value.trim().toUpperCase();
-
         if (!code) {
           promoHint.textContent = 'Введите промокод';
           promoHint.className = 'promo-hint error';
-          currentDiscount = 0;
-          appliedPromo = '';
-          updateSummary();
+          currentDiscount = 0; appliedPromo = ''; updateSummary();
           return;
         }
-
         if (PROMO_CODES[code]) {
-          currentDiscount = PROMO_CODES[code];
-          appliedPromo = code;
+          currentDiscount = PROMO_CODES[code]; appliedPromo = code;
           promoHint.textContent = '✅ Промокод применён: скидка ' + currentDiscount + '%';
           promoHint.className = 'promo-hint success';
         } else {
-          currentDiscount = 0;
-          appliedPromo = '';
+          currentDiscount = 0; appliedPromo = '';
           promoHint.textContent = '❌ Неверный промокод';
           promoHint.className = 'promo-hint error';
         }
@@ -1036,15 +339,10 @@
 
       promoInput.addEventListener('input', () => {
         if (appliedPromo && promoInput.value.trim().toUpperCase() !== appliedPromo) {
-          currentDiscount = 0;
-          appliedPromo = '';
-          promoHint.textContent = '';
-          promoHint.className = 'promo-hint';
-          updateSummary();
+          currentDiscount = 0; appliedPromo = ''; promoHint.textContent = ''; promoHint.className = 'promo-hint'; updateSummary();
         }
       });
 
-      // ==== Выбор метода оплаты ====
       paymentCards.forEach(card => {
         card.addEventListener('click', () => {
           paymentCards.forEach(c => c.classList.remove('selected'));
@@ -1052,40 +350,20 @@
         });
       });
 
-      // ==== Валидация формы ====
       function validateForm() {
         let isValid = true;
-
         const nameVal = userName.value.trim();
-        if (nameVal.length < 2) {
-          nameError.textContent = 'Введите имя (минимум 2 символа)';
-          userName.classList.add('error');
-          isValid = false;
-        } else {
-          nameError.textContent = '';
-          userName.classList.remove('error');
-        }
+        if (nameVal.length < 2) { nameError.textContent = 'Введите имя (минимум 2 символа)'; userName.classList.add('error'); isValid = false; }
+        else { nameError.textContent = ''; userName.classList.remove('error'); }
 
         const emailVal = userEmail.value.trim();
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(emailVal)) {
-          emailError.textContent = 'Введите корректный email';
-          userEmail.classList.add('error');
-          isValid = false;
-        } else {
-          emailError.textContent = '';
-          userEmail.classList.remove('error');
-        }
+        if (!emailRegex.test(emailVal)) { emailError.textContent = 'Введите корректный email'; userEmail.classList.add('error'); isValid = false; }
+        else { emailError.textContent = ''; userEmail.classList.remove('error'); }
 
         const steamVal = steamLogin.value.trim();
-        if (steamVal.length < 2) {
-          steamError.textContent = 'Введите логин Steam (минимум 2 символа)';
-          steamLogin.classList.add('error');
-          isValid = false;
-        } else {
-          steamError.textContent = '';
-          steamLogin.classList.remove('error');
-        }
+        if (steamVal.length < 2) { steamError.textContent = 'Введите логин Steam (минимум 2 символа)'; steamLogin.classList.add('error'); isValid = false; }
+        else { steamError.textContent = ''; steamLogin.classList.remove('error'); }
 
         return isValid;
       }
@@ -1093,81 +371,54 @@
       [userName, userEmail, steamLogin].forEach(input => {
         input.addEventListener('input', () => {
           input.classList.remove('error');
-          const errorEl = document.getElementById(
-            input.id === 'userName' ? 'nameError' :
-            input.id === 'userEmail' ? 'emailError' :
-            'steamError'
-          );
+          const errorEl = document.getElementById(input.id === 'userName' ? 'nameError' : input.id === 'userEmail' ? 'emailError' : 'steamError');
           if (errorEl) errorEl.textContent = '';
         });
       });
 
-      // ═══════════════════════════════════════════════════════════════
-      // 📤 ОТПРАВКА ЧЕРЕЗ FORMSPREE
-      // ═══════════════════════════════════════════════════════════════
       payButton.addEventListener('click', async (e) => {
         e.preventDefault();
-
-        // Скрываем старые сообщения
         successMessage.classList.remove('visible');
         errorMessage.classList.remove('visible');
 
-        // Валидация
         if (!validateForm()) {
           const firstError = document.querySelector('.form-field input.error');
-          if (firstError) {
-            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            firstError.focus();
-          }
+          if (firstError) { firstError.scrollIntoView({ behavior: 'smooth', block: 'center' }); firstError.focus(); }
           return;
         }
 
-        // Сбор данных
         const amount = parseFloat(amountInput.value) || 0;
         const selectedMethod = document.querySelector('.payment-card.selected')?.dataset.method || 'card';
-        const methodNames = {
-          card: 'Банковская карта',
-          sbp: 'СБП',
-          wallet: 'ЮMoney',
-          crypto: 'Криптовалюта'
-        };
-
+        const methodNames = { card: 'Банковская карта', sbp: 'СБП', wallet: 'ЮMoney', crypto: 'Криптовалюта' };
         let finalAmount = amount;
-        let discountInfo = '';
-        if (currentDiscount > 0) {
-          finalAmount = amount - (amount * (currentDiscount / 100));
-          discountInfo = ` (скидка ${currentDiscount}% по промокоду ${appliedPromo})`;
-        }
-
+        if (currentDiscount > 0) finalAmount = amount - (amount * (currentDiscount / 100));
         const orderNumber = generateOrderNumber();
 
-        // Формируем данные для Formspree
-        const formData = {
-          _subject: `⚡ Пополнение Steam ${orderNumber} — Goodik Store`,
+        // Данные для FormsList
+        const payload = {
           order_number: orderNumber,
-          order_date: new Date().toLocaleString('ru-RU'),
           customer_name: userName.value.trim(),
           customer_email: userEmail.value.trim(),
           steam_login: steamLogin.value.trim(),
           amount: formatNumber(amount) + ' ₽',
-          discount: currentDiscount > 0 ? `${currentDiscount}% (промокод ${appliedPromo})` : 'нет',
+          promo: appliedPromo || 'не использован',
+          discount: currentDiscount > 0 ? currentDiscount + '%' : 'нет',
           final_amount: formatNumber(finalAmount) + ' ₽',
           payment_method: methodNames[selectedMethod],
-          store: 'Goodik Store'
+          submitted_at: new Date().toLocaleString('ru-RU')
         };
 
-        // Состояние загрузки
         payButton.disabled = true;
         payButton.innerHTML = '<span class="spinner"></span><span>Отправка...</span>';
 
         try {
-          const response = await fetch(FORMSPREE_ENDPOINT, {
+          const response = await fetch(FORMSLIST_ENDPOINT, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               'Accept': 'application/json'
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify(payload)
           });
 
           if (!response.ok) {
@@ -1175,62 +426,45 @@
             throw new Error(errorData.error || `HTTP ${response.status}`);
           }
 
-          // Успех
-          console.log('✅ Заявка отправлена через Formspree:', formData);
+          console.log('✅ Заявка отправлена через FormsList:', payload);
 
           successMessage.innerHTML = `
             ✅ <strong>Заявка отправлена!</strong><br>
             <span style="color: #8b949e; font-size: 0.85rem; display: block; margin-top: 8px;">
               Номер заявки: <strong style="color:#2b8cff;">${orderNumber}</strong><br>
-              Логин Steam: ${formData.steam_login}<br>
-              Сумма: ${formData.final_amount}${discountInfo}<br>
-              Способ оплаты: ${formData.payment_method}<br>
-              Детали отправлены на <strong style="color:#2b8cff;">${formData.customer_email}</strong>
+              Логин Steam: ${payload.steam_login}<br>
+              Сумма: ${payload.final_amount}<br>
+              Способ оплаты: ${payload.payment_method}<br>
+              Детали отправлены на <strong style="color:#2b8cff;">${payload.customer_email}</strong>
             </span>
           `;
           successMessage.classList.add('visible');
           successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-          // Сброс формы
-          userName.value = '';
-          userEmail.value = '';
-          steamLogin.value = '';
-          promoInput.value = '';
-          currentDiscount = 0;
-          appliedPromo = '';
-          promoHint.textContent = '';
-          promoHint.className = 'promo-hint';
+          userName.value = ''; userEmail.value = ''; steamLogin.value = ''; promoInput.value = '';
+          currentDiscount = 0; appliedPromo = ''; promoHint.textContent = ''; promoHint.className = 'promo-hint';
           updateSummary();
 
         } catch (err) {
-          console.error('❌ Ошибка отправки:', err);
-
+          console.error('❌ Ошибка:', err);
           errorMessage.innerHTML = `
             ❌ <strong>Ошибка отправки</strong><br>
             <span style="color: #8b949e; font-size: 0.85rem; display: block; margin-top: 8px;">
-              ${err.message || 'Проверьте соединение и попробуйте снова'}<br>
+              ${err.message || 'Проверьте соединение'}<br>
               Или напишите на support@goodik.store
             </span>
           `;
           errorMessage.classList.add('visible');
           errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } finally {
-          // Возвращаем кнопку
           payButton.disabled = false;
           payButton.innerHTML = '<span>Перейти к оплате</span><span>→</span>';
         }
       });
 
-      // ==== Инициализация ====
       setAmount(1000);
-
       [userName, userEmail, steamLogin].forEach(input => {
-        input.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            payButton.click();
-          }
-        });
+        input.addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); payButton.click(); } });
       });
     })();
   </script>
