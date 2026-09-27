@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#000000">
+<title>GreenTok</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🟢</text></svg>">
+
+<style>
+/* ==================== ROOT ==================== */
+:root {
+  --green: #00e676;
+  --green-dark: #00c853;
+  --green-glow: rgba(0, 230, 118, 0.4);
+  --bg: #000;
+  --bg-2: #121212;
+  --bg-3: #1c1c1c;
+  --text: #fff;
+  --text-dim: #a0a0a0;
+  --pink: #ff2d55;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+  user-select: none;
+}
+
+button { font-family: inherit; cursor: pointer; border: none; }
+input, textarea { font-family: inherit; }
+
+/* ==================== TOP BAR ==================== */
+.top-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  z-index: 20;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+  pointer-events: none;
+}
+.top-bar > * { pointer-events: auto; }
+
+.tabs { display: flex; gap: 22px; }
+.tab {
+  background: none;
+  color: var(--text-dim);
+  font-size: 16px;
+  font-weight: 600;
+  padding-bottom: 4px;
+  position: relative;
+  transition: .2s;
+}
+.tab.active { color: var(--text); }
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 26px; height: 2.5px;
+  background: var(--green);
+  border-radius: 2px;
+  box-shadow: 0 0 10px var(--green);
+}
+
+.icon-btn {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  color: var(--text);
+  font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  transition: .2s;
+}
+.icon-btn:hover { background: rgba(0,230,118,0.2); }
+
+/* ==================== FEED ==================== */
+.feed {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+}
+.feed::-webkit-scrollbar { display: none; }
+
+.video-slide {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  scroll-snap-align: start;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  overflow: hidden;
+}
+
+.video-slide video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+.play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  font-size: 80px;
+  color: rgba(255,255,255,0.85);
+  text-shadow: 0 0 30px rgba(0,230,118,0.7);
+  opacity: 0;
+  transition: opacity .2s;
+}
+.play-overlay.visible { opacity: 1; }
+
+/* === Информация о видео === */
+.video-info {
+  position: absolute;
+  bottom: 100px; left: 16px; right: 90px;
+  z-index: 5;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+}
+.video-author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+.author-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #000;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+  border: 2px solid #fff;
+  flex-shrink: 0;
+}
+.author-name { font-weight: 700; font-size: 15px; }
+.follow-btn {
+  padding: 5px 14px;
+  border: 1.5px solid var(--green);
+  background: transparent;
+  color: var(--green);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  transition: .2s;
+}
+.follow-btn:hover, .follow-btn.following {
+  background: var(--green);
+  color: #000;
+}
+.video-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.video-hashtags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--green);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.hashtag { cursor: pointer; }
+.video-sound {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  margin-top: 4px;
+}
+.sound-wave {
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+  height: 14px;
+}
+.sound-wave span {
+  display: block;
+  width: 2px;
+  background: var(--green);
+  border-radius: 1px;
+  animation: wave 0.8s infinite ease-in-out;
+}
+.sound-wave span:nth-child(1) { height: 6px; animation-delay: 0s; }
+.sound-wave span:nth-child(2) { height: 12px; animation-delay: 0.15s; }
+.sound-wave span:nth-child(3) { height: 8px; animation-delay: 0.3s; }
+.sound-wave span:nth-child(4) { height: 14px; animation-delay: 0.45s; }
+.sound-wave span:nth-child(5) { height: 6px; animation-delay: 0.6s; }
+
+@keyframes wave {
+  0%, 100% { transform: scaleY(0.5); }
+  50% { transform: scaleY(1.5); }
+}
+
+/* === Боковые кнопки === */
+.side-actions {
+  position: absolute;
+  right: 10px;
+  bottom: 110px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  z-index: 6;
+  align-items: center;
+}
+.action-btn {
+  background: none;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  transition: transform .15s;
+}
+.action-btn:active { transform: scale(0.9); }
+.action-icon {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  transition: .2s;
+}
+.action-btn:hover .action-icon { background: rgba(0,230,118,0.25); }
+.action-btn.liked .action-icon {
+  background: var(--green);
+  box-shadow: 0 0 20px var(--green-glow);
+  animation: pop .35s;
+}
+.action-count {
+  font-size: 12px;
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+.author-disc {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #000;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  border: 2px solid #fff;
+}
+.author-disc.playing { animation: spin 4s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.progress-bar-video {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2.5px;
+  background: rgba(255,255,255,0.2);
+  z-index: 7;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--green);
+  width: 0;
+  box-shadow: 0 0 8px var(--green);
+}
+
+/* ==================== BOTTOM NAV ==================== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(0,0,0,0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 8px 0 10px;
+  z-index: 30;
+}
+.nav-btn {
+  background: none;
+  color: var(--text-dim);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 14px;
+  font-size: 22px;
+  transition: .2s;
+}
+.nav-btn small { font-size: 10px; font-weight: 500; }
+.nav-btn.active { color: var(--green); }
+
+.create-btn .plus {
+  width: 44px; height: 30px;
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  border-radius: 8px;
+  color: #000;
+  font-size: 22px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px var(--green-glow);
+}
+
+/* ==================== MODALS ==================== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(6px);
+  display: none;
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn .2s;
+}
+.modal.show { display: flex; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-content {
+  background: var(--bg-2);
+  border: 1px solid rgba(0,230,118,0.2);
+  border-radius: 18px;
+  padding: 22px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 0 60px rgba(0,230,118,0.2);
+  animation: slideUp .3s;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.modal-header h3 { color: var(--green); font-size: 20px; }
+
+.close-btn {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+  font-size: 16px;
+  transition: .2s;
+}
+.close-btn:hover { background: rgba(0,230,118,0.2); }
+
+.modal-content label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+.modal-content input,
+.modal-content textarea {
+  width: 100%;
+  padding: 11px 14px;
+  margin-bottom: 14px;
+  background: var(--bg);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  transition: .2s;
+  resize: vertical;
+}
+.modal-content input:focus,
+.modal-content textarea:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(0,230,118,0.15);
+}
+
+.file-drop {
+  aspect-ratio: 16/9;
+  background: var(--bg);
+  border: 2px dashed rgba(0,230,118,0.3);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: .2s;
+}
+.file-drop:hover { border-color: var(--green); }
+.file-drop.dragover {
+  border-color: var(--green);
+  background: rgba(0,230,118,0.05);
+  box-shadow: 0 0 30px rgba(0,230,118,0.2);
+}
+.file-placeholder { text-align: center; color: var(--text-dim); padding: 20px; }
+.file-icon { font-size: 44px; margin-bottom: 8px; }
+.file-placeholder small { display: block; margin-top: 6px; font-size: 11px; opacity: .7; }
+.preview-video { width: 100%; height: 100%; object-fit: contain; }
+
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  border-radius: 12px;
+  color: #000;
+  font-weight: 700;
+  font-size: 15px;
+  transition: .2s;
+  box-shadow: 0 4px 20px rgba(0,230,118,0.3);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 30px rgba(0,230,118,0.5); }
+
+/* === Comments === */
+.comments-modal { padding: 0; }
+.comments-panel {
+  background: var(--bg-2);
+  width: 100%;
+  max-width: 500px;
+  height: 70vh;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(0,230,118,0.2);
+  animation: slideUp .3s;
+}
+.comments-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.comments-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+}
+.comment {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+  animation: fadeIn .3s;
+}
+.comment-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #000;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.comment-body { flex: 1; }
+.comment-author { font-weight: 700; font-size: 13px; margin-bottom: 3px; }
+.comment-text { font-size: 14px; line-height: 1.4; margin-bottom: 4px; }
+.comment-time { font-size: 11px; color: var(--text-dim); }
+.no-comments { text-align: center; color: var(--text-dim); padding: 40px 20px; }
+
+.comment-form {
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  background: var(--bg);
+}
+.comment-form input {
+  flex: 1;
+  padding: 10px 16px;
+  background: var(--bg-3);
+  border: 1px solid transparent;
+  border-radius: 20px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  transition: .2s;
+}
+.comment-form input:focus { border-color: var(--green); }
+.comment-form button {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #000;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* === Search === */
+.search-panel {
+  background: var(--bg-2);
+  width: 100%;
+  max-width: 560px;
+  height: 80vh;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(0,230,118,0.2);
+  animation: slideUp .3s;
+}
+.search-header {
+  display: flex;
+  gap: 10px;
+  padding: 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.search-header input {
+  flex: 1;
+  padding: 11px 16px;
+  background: var(--bg);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 22px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+}
+.search-header input:focus { border-color: var(--green); }
+.search-results {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+}
+.search-hint { text-align: center; color: var(--text-dim); padding: 40px 20px; }
+.search-item {
+  display: flex;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: .2s;
+}
+.search-item:hover { background: var(--bg-3); }
+.search-item video {
+  width: 70px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+  background: #000;
+}
+.search-item-info h4 { font-size: 14px; margin-bottom: 4px; }
+.search-item-info small { color: var(--text-dim); font-size: 12px; }
+
+/* === Profile === */
+.profile-panel {
+  background: var(--bg-2);
+  width: 100%;
+  max-width: 560px;
+  height: 80vh;
+  border-radius: 18px;
+  overflow-y: auto;
+  border: 1px solid rgba(0,230,118,0.2);
+  animation: slideUp .3s;
+  position: relative;
+}
+.profile-panel > .close-btn {
+  position: absolute;
+  top: 16px; right: 16px;
+  z-index: 2;
+}
+.profile-header {
+  padding: 40px 20px 24px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.avatar-large {
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  color: #000;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px;
+  font-weight: 700;
+  margin: 0 auto 14px;
+  box-shadow: 0 0 30px rgba(0,230,118,0.4);
+}
+.profile-header h2 { font-size: 20px; margin-bottom: 16px; }
+.profile-stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+.profile-stats > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.profile-stats strong { font-size: 20px; color: var(--green); }
+.profile-stats small { font-size: 12px; color: var(--text-dim); }
+
+.profile-videos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 4px;
+}
+.profile-videos video {
+  width: 100%;
+  aspect-ratio: 9/16;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #000;
+}
+
+/* === Toast === */
+.toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--green);
+  color: #000;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-weight: 600;
+  font-size: 14px;
+  z-index: 1000;
+  opacity: 0;
+  transition: .3s;
+  box-shadow: 0 4px 30px rgba(0,230,118,0.6);
+  pointer-events: none;
+}
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* === Desktop adaptation === */
+@media (min-width: 900px) {
+  .video-slide video {
+    max-width: 500px;
+    max-height: 100%;
+    border-radius: 12px;
+  }
+  .video-info, .side-actions { max-width: 500px; }
+  .side-actions { right: calc(50% - 290px); }
+  .video-info { left: calc(50% - 250px); }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== TOP BAR ==================== -->
+<div class="top-bar">
+  <div class="tabs">
+    <button class="tab active" data-tab="foryou">Для вас</button>
+    <button class="tab" data-tab="following">Подписки</button>
+  </div>
+  <button class="icon-btn" id="searchBtn">🔍</button>
+</div>
+
+<!-- ==================== FEED ==================== -->
+<div class="feed" id="feed"></div>
+
+<!-- ==================== BOTTOM NAV ==================== -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" data-view="home">
+    <span>🏠</span>
+    <small>Главная</small>
+  </button>
+  <button class="nav-btn" data-view="search">
+    <span>🔍</span>
+    <small>Поиск</small>
+  </button>
+  <button class="nav-btn create-btn" data-view="create">
+    <span class="plus">+</span>
+  </button>
+  <button class="nav-btn" data-view="profile">
+    <span>👤</span>
+    <small>Профиль</small>
+  </button>
+</nav>
+
+<!-- ==================== UPLOAD MODAL ==================== -->
+<div class="modal" id="uploadModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="close-btn" id="closeUpload">✕</button>
+      <h3>Новое видео</h3>
+    </div>
+    <form id="uploadForm">
+      <div class="file-drop" id="fileDrop">
+        <input type="file" name="video" accept="video/*" id="videoFile" hidden required>
+        <div class="file-placeholder" id="filePlaceholder">
+          <div class="file-icon">🎬</div>
+          <p>Нажмите, чтобы выбрать видео</p>
+          <small>MP4, WebM, MOV</small>
+        </div>
+        <video id="previewVideo" class="preview-video" style="display:none" muted loop playsinline></video>
+      </div>
+
+      <label>Название *</label>
+      <input type="text" name="title" required maxlength="80" placeholder="О чём видео?">
+
+      <label>Описание</label>
+      <textarea name="description" rows="3" maxlength="300" placeholder="Добавьте описание..."></textarea>
+
+      <label>Хештеги</label>
+      <input type="text" name="hashtags" placeholder="#зелёный #video #greentok">
+
+      <label>Ваше имя</label>
+      <input type="text" name="author" id="authorName" placeholder="Аноним" maxlength="30">
+
+      <div class="progress" id="progress" style="display:none; height:6px; background:#000; border-radius:3px; overflow:hidden; margin-bottom:14px;">
+        <div class="progress-bar" id="progressBar" style="height:100%; background:linear-gradient(90deg, var(--green), var(--green-dark)); width:0; transition:width .15s;"></div>
+      </div>
+
+      <button type="submit" class="btn-primary" id="publishBtn">Опубликовать 🚀</button>
+    </form>
+  </div>
+</div>
+
+<!-- ==================== COMMENTS MODAL ==================== -->
+<div class="modal comments-modal" id="commentsModal">
+  <div class="comments-panel">
+    <div class="comments-header">
+      <h3><span id="commentsCount">0</span> комментариев</h3>
+      <button class="close-btn" id="closeComments">✕</button>
+    </div>
+    <div class="comments-list" id="commentsList"></div>
+    <form class="comment-form" id="commentForm">
+      <input type="text" id="commentInput" placeholder="Добавить комментарий..." maxlength="200">
+      <button type="submit">➤</button>
+    </form>
+  </div>
+</div>
+
+<!-- ==================== SEARCH MODAL ==================== -->
+<div class="modal" id="searchModal">
+  <div class="search-panel">
+    <div class="search-header">
+      <input type="text" id="searchInput" placeholder="Поиск видео, хештегов...">
+      <button class="close-btn" id="closeSearch">✕</button>
+    </div>
+    <div class="search-results" id="searchResults">
+      <p class="search-hint">Введите запрос для поиска</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PROFILE MODAL ==================== -->
+<div class="modal" id="profileModal">
+  <div class="profile-panel">
+    <button class="close-btn" id="closeProfile">✕</button>
+    <div class="profile-header">
+      <div class="avatar-large" id="profileAvatar">👤</div>
+      <h2 id="profileName">Имя пользователя</h2>
+      <div class="profile-stats">
+        <div><strong id="profileVideos">0</strong><small>видео</small></div>
+        <div><strong id="profileLikes">0</strong><small>лайков</small></div>
+      </div>
+    </div>
+    <div class="profile-videos" id="profileVideosList"></div>
+  </div>
+</div>
+
+<!-- ==================== TOAST ==================== -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ==================================================================
+   GreenTok — всё в одном файле
+   Работает БЕЗ бэкенда. Видео хранятся в памяти + localStorage.
+   Загруженные файлы живут через blob URL (пока открыта вкладка).
+   ================================================================== */
+
+// ---------- Демо-видео (можно заменить на свои ссылки) ----------
+const DEMO_VIDEOS = [
+  {
+    id: 'demo-1',
+    title: 'Красивая природа 🌿',
+    description: 'Зелёные леса и водопады',
+    hashtags: ['природа', 'зелёный', 'relax'],
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    author: 'NatureChannel',
+    views: 15420,
+    likes: 3421,
+    createdAt: Date.now() - 86400000
+  },
+  {
+    id: 'demo-2',
+    title: 'Урок танцев 💃',
+    description: 'Простая хореография для начинающих',
+    hashtags: ['танцы', 'dance', 'урок'],
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+    author: 'DancePro',
+    views: 8920,
+    likes: 2104,
+    createdAt: Date.now() - 172800000
+  },
+  {
+    id: 'demo-3',
+    title: 'Готовим смузи 🥤',
+    description: '3 рецепта зелёных смузи',
+    hashtags: ['еда', 'смузи', 'рецепт'],
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+    author: 'ChefGreen',
+    views: 5630,
+    likes: 1204,
+    createdAt: Date.now() - 259200000
+  },
+  {
+    id: 'demo-4',
+    title: 'Смешной кот 😂',
+    description: 'Кот против огурца',
+    hashtags: ['коты', 'смешно', 'животные'],
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+    author: 'FunnyPets',
+    views: 45230,
+    likes: 12045,
+    createdAt: Date.now() - 43200000
+  },
+  {
+    id: 'demo-5',
+    title: 'Закат у моря 🌅',
+    description: 'Красивый вид',
+    hashtags: ['закат', 'море', 'красиво'],
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+    author: 'TravelVibes',
+    views: 23100,
+    likes: 5321,
+    createdAt: Date.now() - 3600000
+  }
+];
+
+// ---------- Состояние ----------
+const state = {
+  videos: [],
+  comments: {},
+  liked: new Set(),
+  following: new Set(),
+  currentIndex: 0,
+  currentCommentVideoId: null
+};
+
+// ---------- Загрузка из localStorage ----------
+function loadState() {
+  try {
+    const savedVideos = JSON.parse(localStorage.getItem('greentok_videos') || '[]');
+    // Не сохраняем blob URLs (они не работают после перезагрузки)
+    const persisted = savedVideos.filter(v => !v.url.startsWith('blob:'));
+    state.videos = [...persisted, ...DEMO_VIDEOS];
+    state.comments = JSON.parse(localStorage.getItem('greentok_comments') || '{}');
+    state.liked = new Set(JSON.parse(localStorage.getItem('greentok_liked') || '[]'));
+    state.following = new Set(JSON.parse(localStorage.getItem('greentok_following') || '[]'));
+  } catch (e) {
+    state.videos = [...DEMO_VIDEOS];
+  }
+  sortFeed();
+}
+
+function saveState() {
+  const persistedVideos = state.videos.filter(v => !v.url.startsWith('blob:'));
+  localStorage.setItem('greentok_videos', JSON.stringify(persistedVideos));
+  localStorage.setItem('greentok_comments', JSON.stringify(state.comments));
+  localStorage.setItem('greentok_liked', JSON.stringify([...state.liked]));
+  localStorage.setItem('greentok_following', JSON.stringify([...state.following]));
+}
+
+function sortFeed() {
+  state.videos.sort((a, b) => {
+    const ageA = (Date.now() - a.createdAt) / 3600000;
+    const ageB = (Date.now() - b.createdAt) / 3600000;
+    const scoreA = (a.likes || 0) * 3 + (a.views || 0) - ageA * 2;
+    const scoreB = (b.likes || 0) * 3 + (b.views || 0) - ageB * 2;
+    return scoreB - scoreA;
+  });
+}
+
+// ---------- Утилиты ----------
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function formatCount(n) {
+  if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+  if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+  return String(n);
+}
+
+function timeAgo(ts) {
+  const diff = Math.floor((Date.now() - ts) / 1000);
+  if (diff < 60) return 'только что';
+  if (diff < 3600) return Math.floor(diff / 60) + ' мин';
+  if (diff < 86400) return Math.floor(diff / 3600) + ' ч';
+  if (diff < 604800) return Math.floor(diff / 86400) + ' д';
+  return new Date(ts).toLocaleDateString('ru-RU');
+}
+
+function getInitials(name) {
+  return (name || 'A').trim().charAt(0).toUpperCase();
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// ---------- Рендер ленты ----------
+const feed = document.getElementById('feed');
+
+function renderFeed() {
+  feed.innerHTML = '';
+  state.videos.forEach((v, i) => {
+    feed.appendChild(createSlide(v, i));
+  });
+}
+
+function createSlide(v, index) {
+  const slide = document.createElement('div');
+  slide.className = 'video-slide';
+  slide.dataset.id = v.id;
+  slide.dataset.index = index;
+
+  const liked = state.liked.has(v.id);
+  const following = state.following.has(v.author);
+
+  slide.innerHTML = `
+    <video src="${v.url}" loop muted playsinline preload="metadata"></video>
+    <div class="play-overlay">▶</div>
+    <div class="progress-bar-video"><div class="progress-fill"></div></div>
+
+    <div class="video-info">
+      <div class="video-author" data-author="${escapeHtml(v.author)}">
+        <div class="author-avatar">${getInitials(v.author)}</div>
+        <span class="author-name">@${escapeHtml(v.author)}</span>
+        <button class="follow-btn ${following ? 'following' : ''}" data-follow="${escapeHtml(v.author)}">
+          ${following ? 'Подписки' : 'Подписаться'}
+        </button>
+      </div>
+      <div class="video-title">${escapeHtml(v.title)}</div>
+      ${v.description ? `<div class="video-title" style="font-weight:400;color:#ccc;font-size:13px;">${escapeHtml(v.description)}</div>` : ''}
+      ${(v.hashtags || []).length ? `
+        <div class="video-hashtags">
+          ${v.hashtags.map(h => `<span class="hashtag" data-hashtag="${escapeHtml(h)}">#${escapeHtml(h)}</span>`).join('')}
+        </div>
+      ` : ''}
+      <div class="video-sound">
+        <span>🎵</span>
+        <span>оригинальный звук — ${escapeHtml(v.author)}</span>
+        <div class="sound-wave"><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+    </div>
+
+    <div class="side-actions">
+      <div class="author-disc" data-author="${escapeHtml(v.author)}">${getInitials(v.author)}</div>
+
+      <button class="action-btn like-btn ${liked ? 'liked' : ''}" data-like="${v.id}">
+        <div class="action-icon">❤️</div>
+        <div class="action-count">${formatCount(v.likes || 0)}</div>
+      </button>
+
+      <button class="action-btn" data-comment="${v.id}">
+        <div class="action-icon">💬</div>
+        <div class="action-count">${formatCount((state.comments[v.id] || []).length)}</div>
+      </button>
+
+      <button class="action-btn" data-share="${v.id}">
+        <div class="action-icon">↗️</div>
+        <div class="action-count">Поделиться</div>
+      </button>
+
+      <button class="action-btn" data-delete="${v.id}">
+        <div class="action-icon">🗑️</div>
+        <div class="action-count">Удалить</div>
+      </button>
+    </div>
+  `;
+
+  // Отслеживание времени воспроизведения
+  const video = slide.querySelector('video');
+  const fill = slide.querySelector('.progress-fill');
+
+  video.addEventListener('timeupdate', () => {
+    if (video.duration) {
+      fill.style.width = (video.currentTime / video.duration * 100) + '%';
+    }
+  });
+
+  // Пауза / воспроизведение
+  video.addEventListener('click', () => {
+    if (video.paused) {
+      video.play();
+      slide.querySelector('.play-overlay').classList.remove('visible');
+      slide.querySelector('.author-disc').classList.add('playing');
+    } else {
+      video.pause();
+      slide.querySelector('.play-overlay').classList.add('visible');
+      slide.querySelector('.author-disc').classList.remove('playing');
+    }
+  });
+
+  // Начало воспроизведения — увеличение просмотров (один раз)
+  video.addEventListener('play', function onFirstPlay() {
+    if (!v._viewed) {
+      v._viewed = true;
+      v.views = (v.views || 0) + 1;
+      saveState();
+    }
+    video.removeEventListener('play', onFirstPlay);
+  });
+
+  return slide;
+}
+
+// ---------- Intersection Observer — автовоспроизведение ----------
+let observer;
+
+function setupObserver() {
+  if (observer) observer.disconnect();
+
+  observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const video = entry.target.querySelector('video');
+      const disc = entry.target.querySelector('.author-disc');
+      if (!video) return;
+
+      if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
+        video.muted = false;
+        video.play().catch(() => {
+          video.muted = true;
+          video.play().catch(() => {});
+        });
+        disc?.classList.add('playing');
+        entry.target.querySelector('.play-overlay')?.classList.remove('visible');
+      } else {
+        video.pause();
+        video.currentTime = 0;
+        disc?.classList.remove('playing');
+      }
+    });
+  }, { threshold: [0, 0.6, 1] });
+
+  document.querySelectorAll('.video-slide').forEach(s => observer.observe(s));
+}
+
+// ---------- Делегирование событий ленты ----------
+feed.addEventListener('click', (e) => {
+  const likeBtn = e.target.closest('[data-like]');
+  if (likeBtn) {
+    e.stopPropagation();
+    toggleLike(likeBtn.dataset.like, likeBtn);
+    return;
+  }
+
+  const commentBtn = e.target.closest('[data-comment]');
+  if (commentBtn) {
+    e.stopPropagation();
+    openComments(commentBtn.dataset.comment);
+    return;
+  }
+
+  const shareBtn = e.target.closest('[data-share]');
+  if (shareBtn) {
+    e.stopPropagation();
+    shareVideo(shareBtn.dataset.share);
+    return;
+  }
+
+  const deleteBtn = e.target.closest('[data-delete]');
+  if (deleteBtn) {
+    e.stopPropagation();
+    deleteVideo(deleteBtn.dataset.delete);
+    return;
+  }
+
+  const followBtn = e.target.closest('[data-follow]');
+  if (followBtn) {
+    e.stopPropagation();
+    toggleFollow(followBtn.dataset.follow, followBtn);
+    return;
+  }
+
+  const authorEl = e.target.closest('[data-author]');
+  if (authorEl) {
+    e.stopPropagation();
+    openProfile(authorEl.dataset.author);
+    return;
+  }
+
+  const hashtagEl = e.target.closest('[data-hashtag]');
+  if (hashtagEl) {
+    e.stopPropagation();
+    openSearchWith(hashtagEl.dataset.hashtag);
+    return;
+  }
+});
+
+// ---------- Действия ----------
+function toggleLike(id, btn) {
+  const video = state.videos.find(v => v.id === id);
+  if (!video) return;
+
+  if (state.liked.has(id)) {
+    state.liked.delete(id);
+    video.likes = Math.max(0, (video.likes || 0) - 1);
+    btn.classList.remove('liked');
+  } else {
+    state.liked.add(id);
+    video.likes = (video.likes || 0) + 1;
+    btn.classList.add('liked');
+  }
+
+  btn.querySelector('.action-count').textContent = formatCount(video.likes);
+  saveState();
+}
+
+function toggleFollow(author, btn) {
+  if (state.following.has(author)) {
+    state.following.delete(author);
+    btn.classList.remove('following');
+    btn.textContent = 'Подписаться';
+  } else {
+    state.following.add(author);
+    btn.classList.add('following');
+    btn.textContent = 'Подписки';
+    showToast(`Вы подписались на @${author}`);
+  }
+  saveState();
+}
+
+function shareVideo(id) {
+  const video = state.videos.find(v => v.id === id);
+  if (!video) return;
+
+  const url = location.href.split('?')[0] + '?v=' + id;
+
+  if (navigator.share) {
+    navigator.share({ title: video.title, text: 'Смотри в GreenTok', url }).catch(() => {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => showToast('Ссылка скопирована ✅'));
+  } else {
+    showToast('Ссылка: ' + url);
+  }
+}
+
+function deleteVideo(id) {
+  if (!confirm('Удалить это видео?')) return;
+  state.videos = state.videos.filter(v => v.id !== id);
+  delete state.comments[id];
+  saveState();
+  renderFeed();
+  setupObserver();
+  showToast('Видео удалено 🗑️');
+}
+
+// ---------- Комментарии ----------
+function openComments(videoId) {
+  state.currentCommentVideoId = videoId;
+  renderComments();
+  document.getElementById('commentsModal').classList.add('show');
+}
+
+function renderComments() {
+  const videoId = state.currentCommentVideoId;
+  const list = state.comments[videoId] || [];
+  const listEl = document.getElementById('commentsList');
+
+  document.getElementById('commentsCount').textContent = list.length;
+
+  if (!list.length) {
+    listEl.innerHTML = '<p class="no-comments">Пока нет комментариев.<br>Будьте первым! 💬</p>';
+    return;
+  }
+
+  listEl.innerHTML = list
+    .slice()
+    .sort((a, b) => b.createdAt - a.createdAt)
+    .map(c => `
+      <div class="comment">
+        <div class="comment-avatar">${getInitials(c.author)}</div>
+        <div class="comment-body">
+          <div class="comment-author">@${escapeHtml(c.author)}</div>
+          <div class="comment-text">${escapeHtml(c.text)}</div>
+          <div class="comment-time">${timeAgo(c.createdAt)}</div>
+        </div>
+      </div>
+    `).join('');
+}
+
+document.getElementById('commentForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const input = document.getElementById('commentInput');
+  const text = input.value.trim();
+  if (!text || !state.currentCommentVideoId) return;
+
+  const author = localStorage.getItem('greentok_username') || 'Аноним';
+
+  if (!state.comments[state.currentCommentVideoId]) {
+    state.comments[state.currentCommentVideoId] = [];
+  }
+
+  state.comments[state.currentCommentVideoId].push({
+    id: 'c_' + Date.now(),
+    text,
+    author,
+    createdAt: Date.now()
+  });
+
+  input.value = '';
+  saveState();
+  renderComments();
+
+  // Обновить счётчик на кнопке
+  const videoId = state.currentCommentVideoId;
+  const btn = document.querySelector(`[data-comment="${videoId}"] .action-count`);
+  if (btn) btn.textContent = formatCount((state.comments[videoId] || []).length);
+});
+
+document.getElementById('closeComments').onclick = () => {
+  document.getElementById('commentsModal').classList.remove('show');
+};
+
+// ---------- Поиск ----------
+const searchModal = document.getElementById('searchModal');
+const searchInput = document.getElementById('searchInput');
+const searchResults = document.getElementById('searchResults');
+
+document.getElementById('searchBtn').onclick = () => {
+  searchModal.classList.add('show');
+  setTimeout(() => searchInput.focus(), 100);
+};
+document.getElementById('closeSearch').onclick = () => searchModal.classList.remove('show');
+
+function openSearchWith(query) {
+  searchModal.classList.add('show');
+  searchInput.value = query;
+  performSearch();
+}
+
+function performSearch() {
+  const q = searchInput.value.trim().toLowerCase();
+  if (!q) {
+    searchResults.innerHTML = '<p class="search-hint">Введите запрос для поиска</p>';
+    return;
+  }
+
+  const results = state.videos.filter(v =>
+    v.title.toLowerCase().includes(q) ||
+    (v.description || '').toLowerCase().includes(q) ||
+    (v.hashtags || []).some(h => h.toLowerCase().includes(q)) ||
+    v.author.toLowerCase().includes(q)
+  );
+
+  if (!results.length) {
+    searchResults.innerHTML = '<p class="search-hint">Ничего не найдено 🔍</p>';
+    return;
+  }
+
+  searchResults.innerHTML = results.map(v => `
+    <div class="search-item" data-goto="${v.id}">
+      <video src="${v.url}" muted preload="metadata"></video>
+      <div class="search-item-info">
+        <h4>${escapeHtml(v.title)}</h4>
+        <small>@${escapeHtml(v.author)} • ${formatCount(v.views || 0)} просмотров</small>
+      </div>
+    </div>
+  `).join('');
+}
+
+searchInput.addEventListener('input', performSearch);
+
+searchResults.addEventListener('click', (e) => {
+  const item = e.target.closest('[data-goto]');
+  if (!item) return;
+  const id = item.dataset.goto;
+  searchModal.classList.remove('show');
+  scrollToVideo(id);
+});
+
+function scrollToVideo(id) {
+  const slide = document.querySelector(`.video-slide[data-id="${id}"]`);
+  if (slide) {
+    slide.scrollIntoView({ behavior: 'smooth' });
+    // Пересортировка не нужна — просто скроллим
+  } else {
+    showToast('Видео не в ленте 😕');
+  }
+}
+
+// ---------- Профиль ----------
+const profileModal = document.getElementById('profileModal');
+
+function openProfile(name) {
+  const videos = state.videos.filter(v => v.author === name);
+  const likes = videos.reduce((s, v) => s + (v.likes || 0), 0);
+
+  document.getElementById('profileAvatar').textContent = getInitials(name);
+  document.getElementById('profileName').textContent = '@' + name;
+  document.getElementById('profileVideos').textContent = videos.length;
+  document.getElementById('profileLikes').textContent = formatCount(likes);
+
+  const list = document.getElementById('profileVideosList');
+  if (!videos.length) {
+    list.innerHTML = '<p class="search-hint" style="grid-column:1/-1;">Нет видео</p>';
+  } else {
+    list.innerHTML = videos.map(v => `
+      <video src="${v.url}" muted preload="metadata" data-goto="${v.id}"></video>
+    `).join('');
+  }
+
+  profileModal.classList.add('show');
+}
+
+document.getElementById('closeProfile').onclick = () => profileModal.classList.remove('show');
+
+document.getElementById('profileVideosList').addEventListener('click', (e) => {
+  const v = e.target.closest('[data-goto]');
+  if (!v) return;
+  profileModal.classList.remove('show');
+  scrollToVideo(v.dataset.goto);
+});
+
+// ---------- Загрузка видео ----------
+const uploadModal = document.getElementById('uploadModal');
+const uploadForm = document.getElementById('uploadForm');
+const fileDrop = document.getElementById('fileDrop');
+const videoFile = document.getElementById('videoFile');
+const filePlaceholder = document.getElementById('filePlaceholder');
+const previewVideo = document.getElementById('previewVideo');
+const progress = document.getElementById('progress');
+const progressBar = document.getElementById('progressBar');
+
+function openUpload() {
+  uploadModal.classList.add('show');
+}
+function closeUpload() {
+  uploadModal.classList.remove('show');
+}
+
+document.getElementById('closeUpload').onclick = closeUpload;
+uploadModal.addEventListener('click', e => { if (e.target === uploadModal) closeUpload(); });
+
+fileDrop.onclick = () => videoFile.click();
+
+fileDrop.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  fileDrop.classList.add('dragover');
+});
+fileDrop.addEventListener('dragleave', () => fileDrop.classList.remove('dragover'));
+fileDrop.addEventListener('drop', (e) => {
+  e.preventDefault();
+  fileDrop.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('video/')) {
+    videoFile.files = e.dataTransfer.files;
+    showPreview(file);
+  }
+});
+
+videoFile.addEventListener('change', () => {
+  const file = videoFile.files[0];
+  if (file) showPreview(file);
+});
+
+function showPreview(file) {
+  const url = URL.createObjectURL(file);
+  previewVideo.src = url;
+  previewVideo.style.display = 'block';
+  filePlaceholder.style.display = 'none';
+  previewVideo.play().catch(() => {});
+}
+
+uploadForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const file = videoFile.files[0];
+  if (!file) {
+    showToast('Выберите видеофайл ⚠️');
+    return;
+  }
+
+  const fd = new FormData(uploadForm);
+  const title = fd.get('title') || 'Без названия';
+  const description = fd.get('description') || '';
+  const hashtags = (fd.get('hashtags') || '')
+    .split(/[\s,]+/)
+    .filter(Boolean)
+    .map(t => t.replace(/^#/, ''));
+  const author = (fd.get('author') || '').trim() || 'Аноним';
+
+  localStorage.setItem('greentok_username', author);
+
+  // Имитация прогресса (файл уже в браузере, поэтому просто показываем анимацию)
+  progress.style.display = 'block';
+  progressBar.style.width = '0%';
+
+  let p = 0;
+  const interval = setInterval(() => {
+    p += Math.random() * 20;
+    if (p >= 100) {
+      p = 100;
+      clearInterval(interval);
+      finishUpload();
+    }
+    progressBar.style.width = p + '%';
+  }, 100);
+
+  function finishUpload() {
+    const url = URL.createObjectURL(file);
+
+    const video = {
+      id: 'v_' + Date.now(),
+      title,
+      description,
+      hashtags,
+      url,
+      author,
+      views: 0,
+      likes: 0,
+      createdAt: Date.now()
+    };
+
+    state.videos.unshift(video);
+    saveState();
+    renderFeed();
+    setupObserver();
+    closeUpload();
+    uploadForm.reset();
+    previewVideo.style.display = 'none';
+    filePlaceholder.style.display = 'block';
+    progress.style.display = 'none';
+    showToast('Опубликовано! 🚀');
+  }
+});
+
+// ---------- Табы ----------
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+
+    if (tab.dataset.tab === 'following') {
+      const followed = state.videos.filter(v => state.following.has(v.author));
+      if (!followed.length) {
+        showToast('Вы ни на кого не подписаны 😕');
+        return;
+      }
+      // Показать только подписки
+      renderFilteredFeed(followed);
+    } else {
+      renderFeed();
+      setupObserver();
+    }
+  };
+});
+
+function renderFilteredFeed(videos) {
+  feed.innerHTML = '';
+  videos.forEach((v, i) => feed.appendChild(createSlide(v, i)));
+  setupObserver();
+  feed.scrollTop = 0;
+}
+
+// ---------- Нижняя навигация ----------
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const view = btn.dataset.view;
+    if (view === 'create') {
+      openUpload();
+      setTimeout(() => {
+        document.querySelector('[data-view="home"]').classList.add('active');
+        btn.classList.remove('active');
+      }, 300);
+    } else if (view === 'search') {
+      document.getElementById('searchBtn').click();
+      setTimeout(() => {
+        document.querySelector('[data-view="home"]').classList.add('active');
+        btn.classList.remove('active');
+      }, 300);
+    } else if (view === 'profile') {
+      const name = localStorage.getItem('greentok_username') || 'Аноним';
+      openProfile(name);
+      setTimeout(() => {
+        document.querySelector('[data-view="home"]').classList.add('active');
+        btn.classList.remove('active');
+      }, 300);
+    }
+  };
+});
+
+// ---------- Клавиатура: стрелки вверх/вниз ----------
+document.addEventListener('keydown', (e) => {
+  if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+
+  const slides = document.querySelectorAll('.video-slide');
+  if (!slides.length) return;
+
+  const current = [...slides].findIndex(s => {
+    const rect = s.getBoundingClientRect();
+    return rect.top >= -50 && rect.top < window.innerHeight / 2;
+  });
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    const next = slides[Math.min(current + 1, slides.length - 1)];
+    next?.scrollIntoView({ behavior: 'smooth' });
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    const prev = slides[Math.max(current - 1, 0)];
+    prev?.scrollIntoView({ behavior: 'smooth' });
+  } else if (e.key === ' ') {
+    e.preventDefault();
+    const video = slides[current]?.querySelector('video');
+    if (video) video.paused ? video.play() : video.pause();
+  }
+});
+
+// ---------- Touch свайпы (вверх/вниз) ----------
+let touchStartY = 0;
+feed.addEventListener('touchstart', (e) => {
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+// ---------- Инициализация ----------
+function init() {
+  loadState();
+
+  // Поддержка ?v=ID в URL
+  const params = new URLSearchParams(location.search);
+  const startId = params.get('v');
+
+  renderFeed();
+  setupObserver();
+
+  if (startId) {
+    setTimeout(() => scrollToVideo(startId), 300);
+  }
+
+  // Первое видео запускаем после первого взаимодействия
+  const tryAutoplay = () => {
+    const firstVideo = document.querySelector('.video-slide video');
+    if (firstVideo) {
+      firstVideo.muted = false;
+      firstVideo.play().catch(() => {
+        firstVideo.muted = true;
+        firstVideo.play().catch(() => {});
+      });
+    }
+    document.removeEventListener('click', tryAutoplay);
+    document.removeEventListener('touchstart', tryAutoplay);
+  };
+  document.addEventListener('click', tryAutoplay, { once: true });
+  document.addEventListener('touchstart', tryAutoplay, { once: true });
+}
+
+init();
+</script>
+
+</body>
+</html>
