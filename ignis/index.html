@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#171a21">
+<title>Ignis — игровой магазин</title>
+<style>
+  :root {
+    --bg: #1b2838; --bg-dark: #171a21; --card: #16202d;
+    --panel: #2a475e; --panel-hover: #3a5f8a;
+    --accent: #66c0f4; --accent-hover: #4aa8dd;
+    --green: #a4d007; --green-hover: #8ab905;
+    --red: #c0392b; --red-hover: #a0301f;
+    --text: #c7d5e0; --muted: #8f98a0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { overscroll-behavior-y: contain; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg);
+         color: var(--text); min-height: 100vh; font-size: 14px;
+         -webkit-text-size-adjust: 100%; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: var(--accent-hover); }
+
+  header.topbar { background: var(--bg-dark); padding: 12px 24px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,.3); }
+  .brand { font-size: 22px; font-weight: 800; color: #fff; letter-spacing: .5px;
+           white-space: nowrap; }
+  .brand::before { content: "🔥 "; }
+  .admin-tag { background: var(--green); color: var(--bg-dark); font-size: 10px;
+    font-weight: 700; padding: 2px 6px; border-radius: 4px; letter-spacing: 1px; }
+  .spacer { flex: 1; }
+  .balance { color: var(--green); font-weight: 700; white-space: nowrap; }
+
+  button, .btn { background: var(--panel); color: var(--text); border: none;
+    padding: 8px 14px; border-radius: 4px; cursor: pointer; font-size: 14px;
+    font-family: inherit; transition: background .15s;
+    -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+    min-height: 36px; }
+  button:hover { background: var(--panel-hover); }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  .btn-primary { background: var(--accent); color: var(--bg-dark); font-weight: 600; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-green { background: var(--green); color: var(--bg-dark); font-weight: 700; }
+  .btn-green:hover { background: var(--green-hover); }
+  .btn-danger { background: var(--red); color: #fff; font-weight: 600; }
+  .btn-danger:hover { background: var(--red-hover); }
+  .btn-ghost { background: transparent; border: 1px solid var(--panel); }
+
+  input, select, textarea { background: var(--panel); color: var(--text);
+    border: 1px solid transparent; padding: 8px 10px; border-radius: 4px;
+    font-size: 14px; font-family: inherit; outline: none; transition: border-color .15s;
+    -webkit-tap-highlight-color: transparent; }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  textarea { resize: vertical; min-height: 60px; width: 100%; }
+
+  .auth-wrap { min-height: calc(100vh - 60px); display: flex;
+    align-items: center; justify-content: center; padding: 24px; }
+  .auth-card { background: var(--card); padding: 36px; border-radius: 12px;
+    width: 100%; max-width: 440px; box-shadow: 0 8px 32px rgba(0,0,0,.4); }
+  .auth-card h1 { color: #fff; font-size: 32px; text-align: center; margin-bottom: 8px; }
+  .auth-card .subtitle { color: var(--muted); text-align: center; margin-bottom: 24px; }
+  .auth-card label { display: block; margin: 12px 0 4px; color: var(--muted); font-size: 13px; }
+  .auth-card input { width: 100%; }
+  .auth-card .row { display: flex; gap: 8px; margin-top: 16px; }
+  .auth-card .row button { flex: 1; }
+  .auth-card .hint { color: var(--muted); font-size: 12px; text-align: center; margin-top: 16px; }
+
+  .tabs { display: flex; padding: 0 24px; background: var(--bg-dark);
+    border-bottom: 1px solid #0f1419; overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { padding: 12px 20px; background: var(--panel); color: var(--text);
+    border: none; border-radius: 4px 4px 0 0; margin-right: 2px;
+    white-space: nowrap; flex-shrink: 0; }
+  .tab:hover { background: var(--panel-hover); }
+  .tab.active { background: var(--accent); color: var(--bg-dark); font-weight: 600; }
+
+  .container { padding: 24px; max-width: 1400px; margin: 0 auto; }
+
+  .toolbar { display: flex; gap: 8px; margin-bottom: 20px;
+    flex-wrap: wrap; align-items: center; }
+  .toolbar input { flex: 1; min-width: 200px; max-width: 400px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px; }
+  .game-card { background: var(--card); border-radius: 8px; overflow: hidden;
+    cursor: pointer; display: flex; flex-direction: column; position: relative;
+    transition: transform .15s, box-shadow .15s;
+    -webkit-tap-highlight-color: transparent; }
+  .game-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.4); }
+  .game-card .banner { height: 100px; padding: 14px; color: white;
+    font-weight: 700; font-size: 16px; display: flex; align-items: flex-start;
+    word-break: break-word; }
+  .game-card .body { padding: 12px; display: flex; flex-direction: column;
+    gap: 6px; flex: 1; }
+  .game-card .title { color: #fff; font-weight: 600; }
+  .game-card .genre { color: var(--muted); font-size: 12px; }
+  .game-card .price { color: var(--green); font-weight: 700; margin-top: auto; }
+
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.75);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px; z-index: 100; overflow-y: auto; }
+  .modal { background: var(--card); border-radius: 12px; width: 100%;
+    max-width: 760px; max-height: 90vh; display: flex; flex-direction: column;
+    overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,.6); position: relative; }
+  .modal-banner { padding: 24px; color: white; font-size: 26px;
+    font-weight: 800; min-height: 100px; display: flex; align-items: center; }
+  .modal-body { padding: 20px 24px; overflow-y: auto; flex: 1;
+    overscroll-behavior: contain; scroll-behavior: smooth; }
+  .modal-close { position: absolute; top: 12px; right: 16px;
+    background: transparent; color: white; font-size: 22px; padding: 4px 10px; z-index: 10; }
+  .modal-close:hover { background: rgba(255,255,255,.15); }
+  .modal-meta { color: var(--muted); margin-bottom: 12px; }
+  .modal-desc { margin-bottom: 16px; line-height: 1.5; }
+  .modal-actions { display: flex; gap: 8px; align-items: center;
+    margin-bottom: 20px; flex-wrap: wrap; }
+  .modal-actions .price-big { color: var(--green); font-size: 20px;
+    font-weight: 700; margin-right: 8px; }
+  .review { background: var(--bg); padding: 12px; border-radius: 6px; margin-bottom: 8px; }
+  .review .review-head { font-weight: 600; margin-bottom: 4px; }
+  .review .review-stars { color: var(--green); }
+  .review-form { display: flex; gap: 8px; margin-top: 12px; }
+  .review-form select { width: 70px; }
+  .review-form input { flex: 1; }
+
+  .empty { color: var(--muted); text-align: center; padding: 48px 16px; grid-column: 1 / -1; }
+  .loading { text-align: center; padding: 48px; color: var(--muted); }
+
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: var(--panel); color: var(--text); padding: 12px 20px;
+    border-radius: 6px; box-shadow: 0 4px 16px rgba(0,0,0,.4);
+    z-index: 200; animation: slideUp .3s ease; max-width: calc(100% - 32px);
+    text-align: center; }
+  .toast.error { background: #8a2020; color: #fff; }
+  .toast.success { background: var(--green); color: var(--bg-dark); font-weight: 600; }
+  @keyframes slideUp { from { transform: translate(-50%, 20px); opacity: 0; }
+                       to { transform: translate(-50%, 0); opacity: 1; } }
+
+  .admin-section { background: var(--card); border-radius: 8px;
+    padding: 20px; margin-bottom: 20px; }
+  .admin-section h3 { color: #fff; margin-bottom: 12px; font-size: 16px; }
+  .admin-form { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .admin-form input, .admin-form select { flex: 1; min-width: 140px; }
+  .keys-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  .keys-table th { text-align: left; padding: 8px; color: var(--muted);
+    font-size: 12px; font-weight: 400; border-bottom: 1px solid var(--panel); }
+  .keys-table td { padding: 8px; border-bottom: 1px solid #0f1419; font-size: 13px; }
+  .keys-table .code-cell { font-family: monospace; cursor: pointer; color: var(--accent); }
+  .keys-table .code-cell:hover { text-decoration: underline; }
+  .keys-table .del-key-btn { background: transparent; color: #ff6b6b;
+    padding: 2px 8px; font-size: 16px; }
+  .keys-table .del-key-btn:hover { background: rgba(255,107,107,.15); }
+
+  .warn-banner { background: #5a3a00; border-left: 3px solid #ffa500;
+    padding: 12px 16px; border-radius: 4px; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .status-badge { display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 600; }
+  .status-approved { background: var(--green); color: var(--bg-dark); }
+  .status-pending { background: #ffa500; color: var(--bg-dark); }
+  .status-rejected { background: var(--red); color: #fff; }
+
+  /* ==========================================================
+     📱 MOBILE ADAPTATION
+     ========================================================== */
+
+  /* Планшеты */
+  @media (max-width: 900px) {
+    .container { padding: 20px; }
+  }
+
+  /* Планшеты / большие телефоны */
+  @media (max-width: 768px) {
+    header.topbar { padding: 10px 16px; gap: 8px; }
+    .brand { font-size: 20px; }
+    .tabs { padding: 0 12px; }
+    .tab { padding: 10px 16px; font-size: 13px; }
+    .container { padding: 16px; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+    .modal { max-width: 100%; max-height: 95vh; }
+    .admin-section { padding: 16px; }
+
+    /* формы в столбик */
+    .admin-form { flex-direction: column; gap: 8px; }
+    .admin-form input, .admin-form select { width: 100%; min-width: 0; }
+    .admin-form button { width: 100%; }
+
+    /* таблицы — горизонтальный скролл как fallback */
+    .keys-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  }
+
+  /* Телефоны */
+  @media (max-width: 600px) {
+    body { font-size: 14px; }
+
+    /* header */
+    header.topbar {
+      padding: 10px 12px;
+      padding-top: max(10px, env(safe-area-inset-top));
+      gap: 6px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .brand { font-size: 18px; }
+    #username { display: none; }              /* логин прячем в шапке */
+    .balance { font-size: 13px; }
+    #btn-topup, #btn-redeem, #btn-logout {
+      padding: 8px 10px; font-size: 13px; min-height: 40px;
+    }
+
+    /* tabs */
+    .tabs { padding: 0 8px; -webkit-overflow-scrolling: touch; }
+    .tab { padding: 10px 14px; font-size: 13px; min-height: 42px; }
+
+    /* контейнер / сетка */
+    .container { padding: 12px; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .game-card .banner { height: 80px; font-size: 13px; padding: 10px; }
+    .game-card .body { padding: 10px; gap: 4px; }
+    .game-card .title { font-size: 13px; }
+
+    /* toolbar */
+    .toolbar { flex-direction: column; align-items: stretch; gap: 8px; }
+    .toolbar input { max-width: 100%; min-width: 0; width: 100%; }
+    .toolbar select { width: 100%; }
+    .toolbar button { width: 100%; }
+
+    /* модалка — fullscreen */
+    .modal-overlay { padding: 0; }
+    .modal {
+      max-width: 100%;
+      max-height: 100vh; max-height: 100dvh;
+      height: 100vh; height: 100dvh;
+      border-radius: 0;
+    }
+    .modal-banner {
+      min-height: 72px; font-size: 20px;
+      padding: 16px 56px 16px 16px;   /* справа место под × */
+      padding-top: max(16px, env(safe-area-inset-top));
+    }
+    .modal-body {
+      padding: 16px;
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+    }
+    .modal-close {
+      top: max(8px, env(safe-area-inset-top));
+      right: 8px;
+      font-size: 24px;
+      width: 44px; height: 44px;
+      padding: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-actions { flex-direction: column; align-items: stretch; gap: 8px; }
+    .modal-actions .price-big { text-align: center; margin: 0 0 4px; }
+    .modal-actions button { width: 100%; min-height: 44px; }
+
+    /* отзывы */
+    .review-form { flex-direction: column; gap: 8px; }
+    .review-form select,
+    .review-form input,
+    .review-form button { width: 100%; }
+
+    /* авторизация */
+    .auth-wrap { padding: 16px; align-items: flex-start;
+                 padding-top: max(32px, env(safe-area-inset-top)); }
+    .auth-card { padding: 24px 20px; max-width: 100%; }
+    .auth-card h1 { font-size: 26px; }
+
+    /* touch targets + iOS zoom prevention */
+    button, .btn { min-height: 44px; }
+    input, select, textarea { font-size: 16px; min-height: 44px; }
+    .tab { min-height: 44px; }
+
+    /* баннер миграции */
+    .warn-banner { flex-direction: column; align-items: stretch; gap: 8px; }
+    .warn-banner button { width: 100%; }
+
+    /* ============================================
+       Таблицы → карточки
+       ============================================ */
+    .keys-table { display: block; overflow: visible; }
+    .keys-table thead { display: none; }
+    .keys-table tbody { display: block; }
+    .keys-table tr {
+      display: block;
+      background: var(--bg);
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+    }
+    .keys-table td {
+      display: block;
+      padding: 4px 0;
+      border: none;
+      word-break: break-word;
+    }
+    .keys-table td::before {
+      content: attr(data-label);
+      color: var(--muted);
+      font-size: 11px;
+      display: block;
+      margin-bottom: 2px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    .keys-table td:last-child { margin-top: 8px; }
+    .keys-table td:last-child::before { display: none; }
+    .keys-table .code-cell { font-size: 14px; }
+    .del-game-btn, .del-key-btn {
+      min-height: 40px; padding: 8px 12px; font-size: 13px;
+    }
+  }
+
+  /* Маленькие телефоны (iPhone SE, 320px) */
+  @media (max-width: 380px) {
+    .brand { font-size: 16px; }
+    .brand::before { content: ""; }
+    header.topbar { gap: 4px; padding: 8px; }
+    #btn-topup, #btn-redeem, #btn-logout {
+      padding: 6px 8px; font-size: 12px; min-height: 38px;
+    }
+    .tab { padding: 8px 12px; font-size: 12px; }
+    .grid { grid-template-columns: 1fr; }
+    .container { padding: 10px; }
+    .modal-banner { font-size: 18px; }
+    .balance { font-size: 12px; }
+    .auth-card { padding: 20px 16px; }
+    .auth-card h1 { font-size: 22px; }
+  }
+
+  /* Touch-устройства: увеличиваем активные зоны */
+  @media (hover: none) and (pointer: coarse) {
+    .game-card { transition: none; }
+    .game-card:active { transform: scale(.98); }
+    button:active { filter: brightness(.9); }
+  }
+</style>
+</head>
+<body>
+
+<div id="fb-status" style="position:fixed;top:8px;right:8px;padding:4px 10px;
+     border-radius:4px;background:#444;color:#fff;font-size:11px;z-index:999;
+     font-family:monospace;">FB: загрузка...</div>
+
+<div id="app"><div class="loading">Загрузка...</div></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import {
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc, setDoc, updateDoc, addDoc, collection,
+  getDocs, serverTimestamp, increment, runTransaction, deleteDoc,
+  query, where, writeBatch, limit,
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDsQgHIJDSMmbEpvYEN-YKJZSxhtgTCFak",
+  authDomain: "ignis-a6203.firebaseapp.com",
+  projectId: "ignis-a6203",
+  storageBucket: "ignis-a6203.firebasestorage.app",
+  messagingSenderId: "511566107871",
+  appId: "1:511566107871:web:b007890a4d0a948afac56a",
+  measurementId: "G-LT4DXGX9JP"
+};
+
+const statusEl = document.getElementById("fb-status");
+let app, auth, db;
+try {
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+  statusEl.textContent = "FB: ok";
+  statusEl.style.background = "#1a6a1a";
+} catch (e) {
+  statusEl.textContent = "FB: ошибка";
+  statusEl.style.background = "#a00";
+  document.getElementById("app").innerHTML =
+    `<div style="padding:48px;text-align:center;color:#ff6b6b;">
+       <h2>Firebase не загрузился</h2><p>${String(e)}</p></div>`;
+  throw e;
+}
+
+const state = { user: null, tab: "store", search: "", sort: "new", activeGameId: null };
+const $ = (sel) => document.querySelector(sel);
+const appEl = $("#app");
+
+function esc(s) {
+  return String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
+}
+function priceLabel(price) {
+  const n = Number(price) || 0;
+  return n === 0 ? "Бесплатно" : `$ ${n.toFixed(2)}`;
+}
+function toast(msg, type = "") {
+  const el = document.createElement("div");
+  el.className = "toast " + type;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3200);
+}
+function errMsg(e) {
+  const code = e?.code || "";
+  const map = {
+    "auth/email-already-in-use": "Этот email уже занят",
+    "auth/invalid-email": "Некорректный email",
+    "auth/weak-password": "Пароль короче 6 символов",
+    "auth/wrong-password": "Неверный пароль",
+    "auth/invalid-credential": "Неверный email или пароль",
+    "auth/user-not-found": "Пользователь не найден",
+    "auth/too-many-requests": "Слишком много попыток",
+    "auth/configuration-not-found": "Email/Password не включён в Firebase Console",
+    "permission-denied": "Недостаточно прав (проверьте Firestore Rules)",
+  };
+  return map[code] || e?.message || String(e);
+}
+function debounce(fn, ms) {
+  let t;
+  return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+}
+function statusBadge(status, reason) {
+  if (status === "approved")
+    return '<span class="status-badge status-approved">✅ Одобрено</span>';
+  if (status === "pending")
+    return '<span class="status-badge status-pending">⏳ На модерации</span>';
+  if (status === "rejected") {
+    let s = '<span class="status-badge status-rejected">❌ Отклонено</span>';
+    if (reason) s += `<div style="color:#ff6b6b;font-size:12px;margin-top:4px">${esc(reason)}</div>`;
+    return s;
+  }
+  return '<span class="status-badge" style="background:#444">— без статуса</span>';
+}
+
+// ==========================================================================
+// Data layer
+// ==========================================================================
+async function fetchUserDoc(uid) {
+  const s = await getDoc(doc(db, "users", uid));
+  return s.exists() ? { id: s.id, ...s.data() } : null;
+}
+async function fetchApprovedGames() {
+  const snap = await getDocs(query(collection(db, "games"), where("status", "==", "approved")));
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+}
+async function fetchAllGames() {
+  const snap = await getDocs(collection(db, "games"));
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+}
+async function fetchMyGames(uid) {
+  const snap = await getDocs(query(collection(db, "games"), where("developer_id", "==", uid)));
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+}
+async function fetchPendingGames() {
+  const snap = await getDocs(query(collection(db, "games"), where("status", "==", "pending")));
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+}
+function filterAndSort(games, search, sort) {
+  let list = games;
+  if (search) {
+    const q = search.toLowerCase();
+    list = list.filter(g => (g.title || "").toLowerCase().includes(q));
+  }
+  const ts = (g) => (g.created_at?.seconds ?? 0);
+  if (sort === "price_asc") list.sort((a, b) => (a.price || 0) - (b.price || 0));
+  else if (sort === "price_desc") list.sort((a, b) => (b.price || 0) - (a.price || 0));
+  else list.sort((a, b) => ts(b) - ts(a));
+  return list;
+}
+async function fetchSubCollection(uid, sub) {
+  const snap = await getDocs(collection(db, "users", uid, sub));
+  const ids = snap.docs.map(d => d.id);
+  const games = await Promise.all(ids.map(async (id) => {
+    const gs = await getDoc(doc(db, "games", id));
+    return gs.exists() ? { id: gs.id, ...gs.data() } : null;
+  }));
+  return games.filter(Boolean);
+}
+async function fetchReviews(gameId) {
+  const snap = await getDocs(collection(db, "games", gameId, "reviews"));
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+}
+async function buyGame(uid, gameId) {
+  const userRef = doc(db, "users", uid);
+  const gameRef = doc(db, "games", gameId);
+  const libRef = doc(db, "users", uid, "library", gameId);
+  await runTransaction(db, async (tx) => {
+    const userSnap = await tx.get(userRef);
+    const gameSnap = await tx.get(gameRef);
+    const libSnap = await tx.get(libRef);
+    if (!userSnap.exists() || !gameSnap.exists()) throw new Error("Документ не найден");
+    if (libSnap.exists()) throw new Error("Игра уже в библиотеке");
+    if (gameSnap.data().status !== "approved") throw new Error("Игра недоступна для покупки");
+    const price = Number(gameSnap.data().price) || 0;
+    const balance = Number(userSnap.data().balance) || 0;
+    if (balance < price) throw new Error("Недостаточно средств на балансе");
+    tx.update(userRef, { balance: balance - price });
+    tx.set(libRef, { purchased_at: serverTimestamp() });
+  });
+}
+async function toggleWish(uid, gameId) {
+  const ref = doc(db, "users", uid, "wishlist", gameId);
+  const snap = await getDoc(ref);
+  if (snap.exists()) await deleteDoc(ref);
+  else await setDoc(ref, { added_at: serverTimestamp() });
+}
+async function addReview(uid, username, gameId, rating, text) {
+  await setDoc(doc(db, "games", gameId, "reviews", uid), {
+    user_id: uid, username, rating, text, created_at: serverTimestamp(),
+  });
+}
+async function topupBalance(uid) {
+  await updateDoc(doc(db, "users", uid), { balance: increment(20) });
+}
+async function createGame({ title, genre, price, color, description }) {
+  await addDoc(collection(db, "games"), {
+    title, genre, price: Number(price) || 0,
+    color: color || "#2a475e",
+    description: description || `${title} — добавлено через админку.`,
+    created_at: serverTimestamp(),
+    status: "approved",
+    developer_id: null, developer_username: null, rejection_reason: null,
+  });
+}
+async function submitGame(uid, username, data) {
+  const title = (data.title || "").trim();
+  if (!title) throw new Error("Введите название");
+  if (Number(data.price) < 0) throw new Error("Цена не может быть отрицательной");
+  await addDoc(collection(db, "games"), {
+    title, genre: (data.genre || "").trim(),
+    price: Number(data.price) || 0,
+    color: data.color || "#2a475e",
+    description: (data.description || "").trim() ||
+      `${title} — игра от разработчика ${username}.`,
+    created_at: serverTimestamp(),
+    developer_id: uid, developer_username: username,
+    status: "pending", rejection_reason: null,
+  });
+}
+async function approveGame(gameId) {
+  await updateDoc(doc(db, "games", gameId), {
+    status: "approved", rejection_reason: null, approved_at: serverTimestamp(),
+  });
+}
+async function rejectGame(gameId, reason) {
+  const r = (reason || "").trim() || "Без указания причины";
+  await updateDoc(doc(db, "games", gameId), { status: "rejected", rejection_reason: r });
+}
+async function deleteGameCascade(gameId, title, onDone) {
+  if (!confirm(
+    `Удалить игру "${title}"?\n\n` +
+    `Будут удалены: игра, все её отзывы и все связанные ключи.\n` +
+    `Это действие необратимо.`
+  )) return;
+  try {
+    const [reviews, keys] = await Promise.all([
+      getDocs(collection(db, "games", gameId, "reviews")),
+      getDocs(query(collection(db, "keys"), where("game_id", "==", gameId))),
+    ]);
+    const refs = [...reviews.docs.map(r => r.ref), ...keys.docs.map(k => k.ref),
+                  doc(db, "games", gameId)];
+    for (let i = 0; i < refs.length; i += 450) {
+      const batch = writeBatch(db);
+      refs.slice(i, i + 450).forEach(r => batch.delete(r));
+      await batch.commit();
+    }
+    toast(`Игра "${title}" удалена`, "success");
+    if (onDone) onDone();
+  } catch (e) { toast(errMsg(e), "error"); }
+}
+async function migrateGamesStatus() {
+  const snap = await getDocs(collection(db, "games"));
+  const toFix = snap.docs.filter(d => !d.data().status);
+  if (!toFix.length) return 0;
+  const batch = writeBatch(db);
+  toFix.forEach(d => batch.update(d.ref, { status: "approved" }));
+  await batch.commit();
+  return toFix.length;
+}
+function generateKey() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const seg = () => Array.from({ length: 5 },
+    () => chars[Math.floor(Math.random() * chars.length)]).join("");
+  return `${seg()}-${seg()}-${seg()}-${seg()}`;
+}
+async function generateKeysForGame(gameId, count) {
+  const gameSnap = await getDoc(doc(db, "games", gameId));
+  if (!gameSnap.exists()) throw new Error("Игра не найдена");
+  const game = gameSnap.data();
+  if (game.status !== "approved")
+    throw new Error("Ключи можно генерировать только для одобренных игр");
+  const codes = [], seen = new Set();
+  while (codes.length < count) {
+    const c = generateKey();
+    if (!seen.has(c)) { seen.add(c); codes.push(c); }
+  }
+  const batch = writeBatch(db);
+  for (const code of codes) {
+    batch.set(doc(db, "keys", code), {
+      code, game_id: gameId, game_title: game.title,
+      used: false, used_by: null, used_by_username: null, used_at: null,
+      created_at: serverTimestamp(),
+    });
+  }
+  await batch.commit();
+  return codes;
+}
+async function redeemKey(uid, username, rawCode) {
+  const code = rawCode.trim().toUpperCase();
+  if (!code) throw new Error("Введите ключ");
+  const keyRef = doc(db, "keys", code);
+  let gameTitle = "";
+  await runTransaction(db, async (tx) => {
+    const keySnap = await tx.get(keyRef);
+    if (!keySnap.exists()) throw new Error("Ключ не найден");
+    const key = keySnap.data();
+    if (key.used) throw new Error("Этот ключ уже был использован");
+    const gameSnap = await tx.get(doc(db, "games", key.game_id));
+    if (!gameSnap.exists()) throw new Error("Игра больше не доступна");
+    const libRef = doc(db, "users", uid, "library", key.game_id);
+    const libSnap = await tx.get(libRef);
+    if (libSnap.exists()) throw new Error("Игра уже в вашей библиотеке");
+    gameTitle = gameSnap.data().title;
+    tx.update(keyRef, {
+      used: true, used_by: uid, used_by_username: username,
+      used_at: serverTimestamp(),
+    });
+    tx.set(libRef, { purchased_at: serverTimestamp(), activated_by_key: code });
+  });
+  return gameTitle;
+}
+
+// ==========================================================================
+// AUTH
+// ==========================================================================
+function renderAuth() {
+  appEl.innerHTML = `
+    <div class="auth-wrap">
+      <div class="auth-card">
+        <h1>Ignis</h1>
+        <p class="subtitle">Игровой магазин на Firebase</p>
+        <form id="login-form" autocomplete="off" novalidate>
+          <input type="text" name="fakeusernameremembered" style="display:none" tabindex="-1">
+          <input type="password" name="fakepasswordremembered" style="display:none" tabindex="-1">
+          <label>Email</label>
+          <input id="login-email" type="email" autocomplete="off" spellcheck="false"
+                 placeholder="you@example.com" required>
+          <label>Пароль</label>
+          <div style="position:relative;">
+            <input id="login-pass" type="password" autocomplete="new-password"
+                   spellcheck="false" placeholder="Минимум 6 символов" required
+                   style="padding-right:44px;width:100%;">
+            <button type="button" id="toggle-pass"
+                    style="position:absolute;right:4px;top:50%;transform:translateY(-50%);
+                           background:transparent;padding:6px 10px;font-size:16px;cursor:pointer;">👁</button>
+          </div>
+          <div id="login-error" style="color:#ff6b6b;font-size:13px;
+               margin-top:10px;min-height:18px;"></div>
+          <div class="row" style="margin-top:8px;">
+            <button type="submit" id="btn-login" class="btn-primary" style="flex:1;">Войти</button>
+          </div>
+        </form>
+        <p class="hint">Нет аккаунта? <a href="#" id="go-register">Зарегистрироваться</a></p>
+      </div>
+    </div>`;
+  const passInput = $("#login-pass");
+  ["login-pass", "login-email"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.readOnly = false; el.disabled = false; }
+  });
+  $("#toggle-pass").onclick = () => {
+    passInput.type = passInput.type === "password" ? "text" : "password";
+    passInput.focus();
+  };
+  $("#login-form").onsubmit = async (e) => {
+    e.preventDefault();
+    const errEl = $("#login-error");
+    errEl.textContent = "";
+    const email = $("#login-email").value.trim();
+    const pass = passInput.value;
+    if (!email) return (errEl.textContent = "Введите email");
+    if (!pass) return (errEl.textContent = "Введите пароль");
+    const btn = $("#btn-login");
+    btn.disabled = true; btn.textContent = "Вход...";
+    try { await signInWithEmailAndPassword(auth, email, pass); }
+    catch (err) { errEl.textContent = errMsg(err); }
+    finally { btn.disabled = false; btn.textContent = "Войти"; }
+  };
+  $("#go-register").onclick = (e) => { e.preventDefault(); renderRegister(); };
+  setTimeout(() => $("#login-email").focus(), 50);
+}
+
+function renderRegister() {
+  appEl.innerHTML = `
+    <div class="auth-wrap">
+      <div class="auth-card">
+        <h1>Ignis</h1>
+        <p class="subtitle">Создать аккаунт</p>
+        <form id="register-form" autocomplete="off" novalidate>
+          <label>Логин</label>
+          <input id="reg-username" type="text" autocomplete="off" spellcheck="false"
+                 placeholder="gamer_42" required>
+          <label>Email</label>
+          <input id="reg-email" type="email" autocomplete="off" spellcheck="false"
+                 placeholder="you@example.com" required>
+          <label>Пароль</label>
+          <div style="position:relative;">
+            <input id="reg-pass" type="password" autocomplete="new-password"
+                   spellcheck="false" placeholder="Минимум 6 символов" required
+                   style="padding-right:44px;width:100%;">
+            <button type="button" id="toggle-reg-pass"
+                    style="position:absolute;right:4px;top:50%;transform:translateY(-50%);
+                           background:transparent;padding:6px 10px;font-size:16px;cursor:pointer;">👁</button>
+          </div>
+          <div id="reg-error" style="color:#ff6b6b;font-size:13px;
+               margin-top:10px;min-height:18px;"></div>
+          <div class="row" style="margin-top:8px;">
+            <button type="submit" class="btn-primary" style="flex:1;">Создать аккаунт</button>
+          </div>
+        </form>
+        <p class="hint">Уже есть аккаунт? <a href="#" id="go-login">Войти</a></p>
+      </div>
+    </div>`;
+  $("#reg-pass").readOnly = false;
+  $("#toggle-reg-pass").onclick = () => {
+    const p = $("#reg-pass");
+    p.type = p.type === "password" ? "text" : "password";
+    p.focus();
+  };
+  $("#register-form").onsubmit = async (e) => {
+    e.preventDefault();
+    const errEl = $("#reg-error");
+    errEl.textContent = "";
+    const email = $("#reg-email").value.trim();
+    const pass = $("#reg-pass").value;
+    const username = $("#reg-username").value.trim() || email.split("@")[0];
+    if (!email) return (errEl.textContent = "Введите email");
+    if (pass.length < 6) return (errEl.textContent = "Пароль минимум 6 символов");
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, pass);
+      await setDoc(doc(db, "users", cred.user.uid), {
+        username, email, balance: 50, is_admin: false,
+      });
+      toast("Аккаунт создан", "success");
+    } catch (err) { errEl.textContent = errMsg(err); }
+  };
+  $("#go-login").onclick = (e) => { e.preventDefault(); renderAuth(); };
+  setTimeout(() => $("#reg-username").focus(), 50);
+}
+
+// ==========================================================================
+// MAIN layout
+// ==========================================================================
+function renderMain() {
+  appEl.innerHTML = `
+    <header class="topbar">
+      <span class="brand">Ignis</span>
+      <span id="admin-tag"></span>
+      <span class="spacer"></span>
+      <span id="username"></span>
+      <span id="balance" class="balance"></span>
+      <button id="btn-topup">+ $20</button>
+      <button id="btn-redeem">🔑 Ключ</button>
+      <button id="btn-logout" class="btn-ghost">Выйти</button>
+    </header>
+    <nav class="tabs">
+      <button class="tab" data-tab="store">Магазин</button>
+      <button class="tab" data-tab="library">Библиотека</button>
+      <button class="tab" data-tab="wishlist">Желаемое</button>
+      <button class="tab" data-tab="developer">🛠 Разработчикам</button>
+      ${state.user.is_admin ? '<button class="tab" data-tab="admin">⚙ Админ</button>' : ''}
+    </nav>
+    <main class="container" id="tab-content"></main>`;
+  document.querySelectorAll(".tab").forEach(btn => {
+    btn.onclick = () => { state.tab = btn.dataset.tab; renderMain(); };
+  });
+  $("#btn-logout").onclick = () => signOut(auth);
+  $("#btn-topup").onclick = async () => {
+    try { await topupBalance(state.user.id); await refreshUser(); }
+    catch (e) { toast(errMsg(e), "error"); }
+  };
+  $("#btn-redeem").onclick = openRedeemModal;
+  updateHeader();
+  renderTab();
+}
+
+function updateHeader() {
+  if (!state.user) return;
+  const u = state.user;
+  $("#username").textContent = u.username || "user";
+  $("#balance").textContent = `$ ${(Number(u.balance) || 0).toFixed(2)}`;
+  $("#admin-tag").innerHTML = u.is_admin ? '<span class="admin-tag">ADMIN</span>' : "";
+}
+async function refreshUser() {
+  if (!state.user) return;
+  const fresh = await fetchUserDoc(state.user.id);
+  if (fresh) { state.user = fresh; updateHeader(); }
+}
+
+// ==========================================================================
+// Tabs router
+// ==========================================================================
+async function renderTab() {
+  const content = $("#tab-content");
+  document.querySelectorAll(".tab").forEach(b =>
+    b.classList.toggle("active", b.dataset.tab === state.tab));
+  try {
+    if (state.tab === "store") await renderStore(content);
+    else if (state.tab === "library") await renderLibrary(content);
+    else if (state.tab === "wishlist") await renderWishlist(content);
+    else if (state.tab === "developer") await renderDeveloper(content);
+    else if (state.tab === "admin") await renderAdmin(content);
+  } catch (e) {
+    content.innerHTML = `<div class="empty">Ошибка: ${esc(errMsg(e))}</div>`;
+    console.error(e);
+  }
+}
+
+async function renderStore(el) {
+  el.innerHTML = `
+    <div class="toolbar">
+      <input id="search" placeholder="Поиск..." value="${esc(state.search)}">
+      <select id="sort">
+        <option value="new">Новые</option>
+        <option value="price_asc">Дешевле</option>
+        <option value="price_desc">Дороже</option>
+      </select>
+    </div>
+    <div class="grid" id="games-grid"><div class="loading">Загрузка...</div></div>`;
+  $("#sort").value = state.sort;
+  $("#sort").onchange = (e) => { state.sort = e.target.value; renderTab(); };
+  $("#search").oninput = debounce((e) => { state.search = e.target.value; renderTab(); }, 300);
+  const games = filterAndSort(await fetchApprovedGames(), state.search, state.sort);
+  renderGamesGrid($("#games-grid"), games);
+}
+
+async function renderLibrary(el) {
+  el.innerHTML = `<div class="grid" id="games-grid">
+                    <div class="loading">Загрузка...</div></div>`;
+  const games = await fetchSubCollection(state.user.id, "library");
+  renderGamesGrid($("#games-grid"), games, "Вы пока ничего не купили");
+}
+
+async function renderWishlist(el) {
+  el.innerHTML = `<div class="grid" id="games-grid">
+                    <div class="loading">Загрузка...</div></div>`;
+  const games = await fetchSubCollection(state.user.id, "wishlist");
+  renderGamesGrid($("#games-grid"), games, "Список желаемого пуст");
+}
+
+function renderGamesGrid(container, games, emptyText = "Ничего не найдено") {
+  if (!games.length) {
+    container.innerHTML = `<div class="empty">${esc(emptyText)}</div>`;
+    return;
+  }
+  container.innerHTML = games.map(g => `
+    <div class="game-card" data-id="${esc(g.id)}">
+      <div class="banner" style="background:${esc(g.color || "#2a475e")}">${esc(g.title)}</div>
+      <div class="body">
+        <div class="title">${esc(g.title)}</div>
+        <div class="genre">${esc(g.genre || "")}</div>
+        <div class="price">${priceLabel(g.price)}</div>
+      </div>
+    </div>`).join("");
+  container.querySelectorAll(".game-card").forEach(card => {
+    card.onclick = () => openGameModal(card.dataset.id);
+  });
+}
+
+// ==========================================================================
+// Вкладка «Разработчикам»
+// ==========================================================================
+async function renderDeveloper(el) {
+  el.innerHTML = '<div class="loading">Загрузка...</div>';
+  let myGames;
+  try { myGames = await fetchMyGames(state.user.id); }
+  catch (e) { el.innerHTML = `<div class="empty">Ошибка: ${esc(errMsg(e))}</div>`; return; }
+  myGames.sort((a, b) => (b.created_at?.seconds ?? 0) - (a.created_at?.seconds ?? 0));
+  const pending = myGames.filter(g => g.status === "pending").length;
+  const approved = myGames.filter(g => g.status === "approved").length;
+  const rejected = myGames.filter(g => g.status === "rejected").length;
+
+  el.innerHTML = `
+    <h2 style="color:#fff;margin-bottom:8px">🛠 Кабинет разработчика</h2>
+    <p style="color:var(--muted);margin-bottom:20px">
+      Отправьте игру на модерацию. После одобрения администратором она появится в магазине.
+    </p>
+    <div class="admin-section">
+      <h3>📝 Новая заявка</h3>
+      <div class="admin-form">
+        <input id="dev-title" placeholder="Название игры" style="flex:2">
+        <input id="dev-genre" placeholder="Жанр">
+        <input id="dev-price" type="number" step="0.01" min="0" value="0" placeholder="Цена ($)">
+        <input id="dev-color" value="#2a475e" placeholder="#hex">
+      </div>
+      <div class="admin-form">
+        <input id="dev-desc" placeholder="Описание (необязательно)" style="flex:1">
+        <button id="dev-submit" class="btn-primary">Отправить на модерацию</button>
+      </div>
+    </div>
+    <div class="admin-section">
+      <h3>📋 Мои заявки
+        <span style="color:var(--muted);font-weight:400;font-size:13px;margin-left:8px">
+          (⏳ ${pending} · ✅ ${approved} · ❌ ${rejected})
+        </span>
+      </h3>
+      ${myGames.length ? renderMyGamesTable(myGames) : '<div class="empty">Вы ещё не отправляли игр</div>'}
+    </div>`;
+
+  $("#dev-submit").onclick = async () => {
+    const title = $("#dev-title").value.trim();
+    if (!title) return toast("Введите название", "error");
+    const btn = $("#dev-submit");
+    btn.disabled = true; btn.textContent = "Отправка...";
+    try {
+      await submitGame(state.user.id, state.user.username, {
+        title, genre: $("#dev-genre").value.trim(),
+        price: parseFloat($("#dev-price").value) || 0,
+        color: $("#dev-color").value.trim() || "#2a475e",
+        description: $("#dev-desc").value.trim(),
+      });
+      toast("Заявка отправлена на модерацию", "success");
+      renderDeveloper(el);
+    } catch (e) { toast(errMsg(e), "error"); }
+    finally { btn.disabled = false; btn.textContent = "Отправить на модерацию"; }
+  };
+  document.querySelectorAll(".dev-del-btn").forEach(btn => {
+    btn.onclick = async () => {
+      if (!confirm("Удалить заявку? Действие необратимо.")) return;
+      try {
+        await deleteDoc(doc(db, "games", btn.dataset.id));
+        toast("Заявка удалена", "success");
+        renderDeveloper(el);
+      } catch (e) { toast(errMsg(e), "error"); }
+    };
+  });
+}
+
+function renderMyGamesTable(games) {
+  return `
+    <table class="keys-table">
+      <thead>
+        <tr><th>Название</th><th>Жанр</th><th>Цена</th><th>Статус</th><th></th></tr>
+      </thead>
+      <tbody>
+        ${games.map(g => `
+          <tr>
+            <td data-label="Название">${esc(g.title)}</td>
+            <td data-label="Жанр">${esc(g.genre || "—")}</td>
+            <td data-label="Цена">${priceLabel(g.price)}</td>
+            <td data-label="Статус">${statusBadge(g.status, g.rejection_reason)}</td>
+            <td>
+              ${g.status === "pending" || g.status === "rejected"
+                ? `<button class="dev-del-btn" data-id="${esc(g.id)}"
+                           style="background:transparent;color:#ff6b6b;padding:8px 12px;font-size:14px"
+                           title="Удалить">🗑 Удалить</button>`
+                : '<span style="color:var(--muted);font-size:12px">—</span>'}
+            </td>
+          </tr>`).join("")}
+      </tbody>
+    </table>`;
+}
+
+// ==========================================================================
+// Админ-панель
+// ==========================================================================
+async function renderAdmin(el) {
+  if (!state.user.is_admin) {
+    el.innerHTML = '<div class="empty">Доступ только для администраторов</div>';
+    return;
+  }
+  el.innerHTML = '<div class="loading">Загрузка...</div>';
+  const allGames = await fetchAllGames();
+  const needsMigration = allGames.filter(g => !g.status).length;
+
+  el.innerHTML = `
+    <h2 style="color:#fff;margin-bottom:16px">⚙ Админ-панель</h2>
+    ${needsMigration ? `
+      <div class="warn-banner">
+        <span>⚠️ <b>${needsMigration}</b> игр без поля <code>status</code> — они не видны в магазине.</span>
+        <button id="migrate-btn" class="btn-primary">Мигрировать</button>
+      </div>` : ""}
+    <div class="admin-section">
+      <h3>🎮 Модерация заявок от разработчиков</h3>
+      <div id="moderation-container"><div class="loading">Загрузка...</div></div>
+    </div>
+    <div class="admin-section">
+      <h3>➕ Добавить игру напрямую</h3>
+      <div class="admin-form">
+        <input id="ag-title" placeholder="Название" style="flex:2">
+        <input id="ag-genre" placeholder="Жанр">
+        <input id="ag-price" type="number" step="0.01" min="0" value="0" placeholder="Цена">
+        <input id="ag-color" value="#2a475e" placeholder="#hex">
+      </div>
+      <div class="admin-form">
+        <input id="ag-desc" placeholder="Описание" style="flex:1">
+        <button id="ag-save" class="btn-primary">Создать игру</button>
+      </div>
+    </div>
+    <div class="admin-section">
+      <h3>🔑 Генерировать ключи</h3>
+      <div class="admin-form">
+        <select id="kg-game"></select>
+        <input id="kg-count" type="number" min="1" max="100" value="5" style="max-width:120px">
+        <button id="kg-generate" class="btn-primary">Сгенерировать</button>
+      </div>
+      <p style="color:var(--muted);font-size:12px;margin-top:8px">
+        Ключи генерируются только для одобренных игр.
+      </p>
+    </div>
+    <div class="admin-section">
+      <h3>📋 Все ключи</h3>
+      <div class="admin-form">
+        <select id="kf-game"><option value="">Все игры</option></select>
+        <select id="kf-status">
+          <option value="">Все</option>
+          <option value="unused">Свободные</option>
+          <option value="used">Использованные</option>
+        </select>
+        <button id="kf-refresh">Обновить</button>
+      </div>
+      <div id="keys-container"></div>
+    </div>
+    <div class="admin-section">
+      <h3>🎮 Все игры (управление)</h3>
+      <div id="games-container"></div>
+    </div>`;
+
+  const approvedGames = allGames.filter(g => g.status === "approved")
+    .sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+  const gameOptions = approvedGames.map(g =>
+    `<option value="${esc(g.id)}">${esc(g.title)}</option>`).join("");
+  $("#kg-game").innerHTML = gameOptions || '<option value="">Нет одобренных игр</option>';
+  $("#kf-game").innerHTML = '<option value="">Все игры</option>' + gameOptions;
+
+  if (needsMigration) {
+    $("#migrate-btn").onclick = async () => {
+      try {
+        const n = await migrateGamesStatus();
+        toast(`Мигрировано игр: ${n}`, "success");
+        renderAdmin(el);
+      } catch (e) { toast(errMsg(e), "error"); }
+    };
+  }
+
+  const loadModeration = async () => {
+    const pending = await fetchPendingGames();
+    const c = $("#moderation-container");
+    if (!pending.length) {
+      c.innerHTML = '<div class="empty">Нет заявок на модерации</div>';
+      return;
+    }
+    c.innerHTML = `
+      <table class="keys-table">
+        <thead>
+          <tr><th>Игра</th><th>Разработчик</th><th>Цена</th><th>Действия</th></tr>
+        </thead>
+        <tbody>
+          ${pending.map(g => `
+            <tr>
+              <td data-label="Игра">
+                <b>${esc(g.title)}</b>
+                <div style="color:var(--muted);font-size:12px">${esc(g.genre || "")}</div>
+                ${g.description ? `<div style="color:var(--muted);font-size:12px;
+                  max-width:340px;overflow:hidden;text-overflow:ellipsis;
+                  white-space:nowrap" title="${esc(g.description)}">${esc(g.description)}</div>` : ""}
+              </td>
+              <td data-label="Разработчик">${esc(g.developer_username || g.developer_id || "—")}</td>
+              <td data-label="Цена">${priceLabel(g.price)}</td>
+              <td data-label="Действия" style="white-space:nowrap">
+                <button class="approve-btn btn-green" data-id="${esc(g.id)}"
+                        style="padding:6px 12px;font-size:13px">✓ Одобрить</button>
+                <button class="reject-btn" data-id="${esc(g.id)}"
+                        style="background:var(--red);color:#fff;padding:6px 12px;
+                               font-size:13px;margin-left:4px">✗ Отклонить</button>
+              </td>
+            </tr>`).join("")}
+        </tbody>
+      </table>`;
+    document.querySelectorAll(".approve-btn").forEach(btn => {
+      btn.onclick = async () => {
+        btn.disabled = true;
+        try {
+          await approveGame(btn.dataset.id);
+          toast("Игра одобрена и добавлена в магазин", "success");
+          loadModeration(); renderAdmin(el);
+        } catch (e) { toast(errMsg(e), "error"); btn.disabled = false; }
+      };
+    });
+    document.querySelectorAll(".reject-btn").forEach(btn => {
+      btn.onclick = async () => {
+        const reason = prompt("Причина отклонения (увидит разработчик):", "");
+        if (reason === null) return;
+        btn.disabled = true;
+        try {
+          await rejectGame(btn.dataset.id, reason);
+          toast("Заявка отклонена", "success");
+          loadModeration();
+        } catch (e) { toast(errMsg(e), "error"); btn.disabled = false; }
+      };
+    });
+  };
+  loadModeration();
+
+  $("#ag-save").onclick = async () => {
+    const title = $("#ag-title").value.trim();
+    if (!title) return toast("Введите название", "error");
+    try {
+      await createGame({
+        title, genre: $("#ag-genre").value.trim(),
+        price: parseFloat($("#ag-price").value) || 0,
+        color: $("#ag-color").value.trim() || "#2a475e",
+        description: $("#ag-desc").value.trim(),
+      });
+      toast("Игра добавлена в магазин", "success");
+      renderAdmin(el);
+    } catch (e) { toast(errMsg(e), "error"); }
+  };
+
+  $("#kg-generate").onclick = async () => {
+    const gameId = $("#kg-game").value;
+    const count = parseInt($("#kg-count").value, 10) || 1;
+    if (!gameId) return toast("Выберите игру", "error");
+    if (count < 1 || count > 100) return toast("Количество: 1–100", "error");
+    const btn = $("#kg-generate");
+    btn.disabled = true; btn.textContent = "Генерация...";
+    try {
+      const codes = await generateKeysForGame(gameId, count);
+      showGeneratedKeys(codes);
+      loadKeys();
+    } catch (e) { toast(errMsg(e), "error"); }
+    finally { btn.disabled = false; btn.textContent = "Сгенерировать"; }
+  };
+
+  const loadKeys = async () => {
+    const gameFilter = $("#kf-game").value;
+    const statusFilter = $("#kf-status").value;
+    $("#keys-container").innerHTML = '<div class="loading">Загрузка...</div>';
+    try {
+      const snap = await getDocs(query(collection(db, "keys"), limit(500)));
+      let keys = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      if (gameFilter) keys = keys.filter(k => k.game_id === gameFilter);
+      if (statusFilter === "unused") keys = keys.filter(k => !k.used);
+      if (statusFilter === "used") keys = keys.filter(k => k.used);
+      keys.sort((a, b) => (b.created_at?.seconds ?? 0) - (a.created_at?.seconds ?? 0));
+      if (!keys.length) {
+        $("#keys-container").innerHTML = '<div class="empty">Ключей нет</div>';
+        return;
+      }
+      $("#keys-container").innerHTML = `
+        <table class="keys-table">
+          <thead>
+            <tr><th>Код</th><th>Игра</th><th>Статус</th><th>Кем использован</th><th></th></tr>
+          </thead>
+          <tbody>
+            ${keys.map(k => `
+              <tr>
+                <td data-label="Код" class="code-cell" data-code="${esc(k.code)}"
+                    title="Кликните чтобы скопировать">${esc(k.code)}</td>
+                <td data-label="Игра">${esc(k.game_title || "—")}</td>
+                <td data-label="Статус">${k.used
+                  ? '<span style="color:var(--muted)">Использован</span>'
+                  : '<span style="color:var(--green)">Свободен</span>'}</td>
+                <td data-label="Кем использован">${esc(k.used_by_username || "—")}</td>
+                <td><button class="del-key-btn" data-id="${esc(k.id)}" title="Удалить">×</button></td>
+              </tr>`).join("")}
+          </tbody>
+        </table>`;
+      document.querySelectorAll(".code-cell").forEach(cell => {
+        cell.onclick = () => {
+          navigator.clipboard.writeText(cell.dataset.code);
+          toast("Ключ скопирован", "success");
+        };
+      });
+      document.querySelectorAll(".del-key-btn").forEach(btn => {
+        btn.onclick = async () => {
+          if (!confirm("Удалить этот ключ?")) return;
+          try { await deleteDoc(doc(db, "keys", btn.dataset.id)); loadKeys(); }
+          catch (e) { toast(errMsg(e), "error"); }
+        };
+      });
+    } catch (e) {
+      $("#keys-container").innerHTML = `<div class="empty">Ошибка: ${esc(errMsg(e))}</div>`;
+    }
+  };
+  $("#kf-game").onchange = loadKeys;
+  $("#kf-status").onchange = loadKeys;
+  $("#kf-refresh").onclick = loadKeys;
+  loadKeys();
+
+  const renderGamesManage = () => {
+    if (!allGames.length) {
+      $("#games-container").innerHTML = '<div class="empty">Игр нет</div>';
+      return;
+    }
+    const sorted = [...allGames].sort((a, b) => (b.created_at?.seconds ?? 0) - (a.created_at?.seconds ?? 0));
+    $("#games-container").innerHTML = `
+      <table class="keys-table">
+        <thead>
+          <tr><th>Название</th><th>Жанр</th><th>Цена</th><th>Разработчик</th>
+              <th>Статус</th><th></th></tr>
+        </thead>
+        <tbody>
+          ${sorted.map(g => `
+            <tr>
+              <td data-label="Название">${esc(g.title)}</td>
+              <td data-label="Жанр">${esc(g.genre || "—")}</td>
+              <td data-label="Цена">${priceLabel(g.price)}</td>
+              <td data-label="Разработчик">${esc(g.developer_username || "—")}</td>
+              <td data-label="Статус">${statusBadge(g.status, g.rejection_reason)}</td>
+              <td><button class="del-game-btn" data-id="${esc(g.id)}"
+                        data-title="${esc(g.title)}"
+                        style="background:transparent;color:#ff6b6b;padding:6px 12px;font-size:13px">
+                  🗑 Удалить</button></td>
+            </tr>`).join("")}
+        </tbody>
+      </table>`;
+    document.querySelectorAll(".del-game-btn").forEach(btn => {
+      btn.onclick = () => deleteGameCascade(btn.dataset.id, btn.dataset.title, () => renderAdmin(el));
+    });
+  };
+  renderGamesManage();
+}
+
+function showGeneratedKeys(codes) {
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+  overlay.innerHTML = `
+    <div class="modal" style="max-width:520px">
+      <button class="modal-close" id="kg-close">×</button>
+      <div class="modal-body">
+        <h2 style="color:#fff;margin-bottom:8px">Сгенерировано ${codes.length} ключей</h2>
+        <p style="color:var(--muted);margin-bottom:12px">
+          Скопируйте и передайте игрокам. Каждый ключ активируется один раз.
+        </p>
+        <textarea id="kg-codes" readonly
+          style="width:100%;height:240px;font-family:monospace;font-size:13px;line-height:1.6"
+        >${codes.join("\n")}</textarea>
+        <button id="kg-copy" class="btn-primary"
+          style="width:100%;margin-top:12px">📋 Скопировать все</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+  $("#kg-close").onclick = () => overlay.remove();
+  $("#kg-copy").onclick = () => {
+    navigator.clipboard.writeText(codes.join("\n"));
+    toast("Скопировано", "success");
+  };
+}
+
+// ==========================================================================
+// Модалка активации ключа
+// ==========================================================================
+function openRedeemModal() {
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+  overlay.innerHTML = `
+    <div class="modal" style="max-width:480px">
+      <button class="modal-close" id="redeem-close">×</button>
+      <div class="modal-body">
+        <h2 style="color:#fff;margin-bottom:8px">🔑 Активировать ключ</h2>
+        <p style="color:var(--muted);margin-bottom:16px">
+          Введите 20-символьный ключ активации
+        </p>
+        <input id="redeem-input" placeholder="XXXXX-XXXXX-XXXXX-XXXXX"
+               inputmode="text" autocapitalize="characters"
+               autocomplete="off" spellcheck="false"
+               style="width:100%;font-family:monospace;font-size:16px;
+                      text-transform:uppercase;letter-spacing:1px;text-align:center">
+        <button id="redeem-submit" class="btn-primary"
+                style="width:100%;margin-top:12px;padding:12px">Активировать</button>
+        <div id="redeem-msg" style="margin-top:12px;min-height:20px;
+             font-size:13px;text-align:center"></div>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+  $("#redeem-close").onclick = () => overlay.remove();
+
+  const input = $("#redeem-input");
+  const submit = $("#redeem-submit");
+  const msg = $("#redeem-msg");
+  input.focus();
+
+  const doRedeem = async () => {
+    msg.textContent = ""; msg.style.color = "";
+    const code = input.value.trim().toUpperCase();
+    if (!code) { msg.textContent = "Введите ключ"; msg.style.color = "#ff6b6b"; return; }
+    submit.disabled = true; submit.textContent = "Проверка...";
+    try {
+      const title = await redeemKey(state.user.id, state.user.username, code);
+      msg.textContent = `✓ Игра "${title}" добавлена в библиотеку!`;
+      msg.style.color = "var(--green)";
+      input.value = "";
+      if (state.tab === "library") renderTab();
+      setTimeout(() => overlay.remove(), 2000);
+    } catch (e) {
+      msg.textContent = "✗ " + (e.message || errMsg(e));
+      msg.style.color = "#ff6b6b";
+    } finally { submit.disabled = false; submit.textContent = "Активировать"; }
+  };
+  submit.onclick = doRedeem;
+  input.onkeydown = (e) => { if (e.key === "Enter") doRedeem(); };
+}
+
+// ==========================================================================
+// Модалка игры
+// ==========================================================================
+async function openGameModal(gameId) {
+  state.activeGameId = gameId;
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+  overlay.id = "game-modal";
+  overlay.innerHTML =
+    `<div class="modal"><div class="loading" style="padding:48px">Загрузка...</div></div>`;
+  document.body.appendChild(overlay);
+  overlay.onclick = (e) => { if (e.target === overlay) closeModal(); };
+  try { await renderGameModalContent(); }
+  catch (e) { closeModal(); toast(errMsg(e), "error"); }
+}
+
+function closeModal() {
+  document.querySelectorAll(".modal-overlay").forEach(m => m.remove());
+  state.activeGameId = null;
+}
+
+async function renderGameModalContent() {
+  const gameId = state.activeGameId;
+  if (!gameId) return;
+  const overlay = $("#game-modal");
+  if (!overlay) return;
+
+  const [gameSnap, reviews, libSnap, wishSnap] = await Promise.all([
+    getDoc(doc(db, "games", gameId)),
+    fetchReviews(gameId),
+    getDoc(doc(db, "users", state.user.id, "library", gameId)),
+    getDoc(doc(db, "users", state.user.id, "wishlist", gameId)),
+  ]);
+  if (!gameSnap.exists()) { closeModal(); return toast("Игра не найдена", "error"); }
+
+  const game = gameSnap.data();
+  const owned = libSnap.exists();
+  const wished = wishSnap.exists();
+  const avg = reviews.length
+    ? (reviews.reduce((s, r) => s + (r.rating || 0), 0) / reviews.length).toFixed(1) : "0";
+
+  overlay.innerHTML = `
+    <div class="modal">
+      <button class="modal-close" id="modal-close">×</button>
+      <div class="modal-banner"
+           style="background:${esc(game.color || "#2a475e")}">${esc(game.title)}</div>
+      <div class="modal-body">
+        <div class="modal-meta">${esc(game.genre || "")} &nbsp; ⭐ ${avg}
+          (${reviews.length} отзывов)
+          ${game.developer_username
+            ? `&nbsp;·&nbsp; разработчик: <b>${esc(game.developer_username)}</b>` : ""}
+        </div>
+        <p class="modal-desc">${esc(game.description || "")}</p>
+        <div class="modal-actions">
+          <span class="price-big">${priceLabel(game.price)}</span>
+          ${owned
+            ? `<span style="color:var(--green);font-weight:700">✓ В библиотеке</span>`
+            : (game.status === "approved"
+              ? `<button id="btn-buy" class="btn-green">Купить за ${priceLabel(game.price)}</button>`
+              : `<span style="color:#ffa500">Игра недоступна для покупки</span>`)}
+          ${game.status === "approved"
+            ? `<button id="btn-wish">${wished ? "Убрать из желаемого" : "В желаемое"}</button>`
+            : ""}
+          ${state.user.is_admin
+            ? `<button id="btn-delete-game" class="btn-danger"
+                       style="margin-left:auto">🗑 Удалить игру</button>` : ""}
+        </div>
+        <h3 style="margin:16px 0 8px;color:#fff">Отзывы</h3>
+        <div id="reviews-list">
+          ${reviews.length
+            ? reviews.map(r => `
+              <div class="review">
+                <div class="review-head">${esc(r.username || "?")}
+                  <span class="review-stars">${"★".repeat(r.rating || 0)}${"☆".repeat(5 - (r.rating || 0))}</span>
+                </div>
+                <div class="review-text">${esc(r.text || "—")}</div>
+              </div>`).join("")
+            : `<p style="color:var(--muted)">Пока нет отзывов.</p>`}
+        </div>
+        <div class="review-form">
+          <select id="review-rating">
+            <option value="5">5</option><option value="4">4</option>
+            <option value="3">3</option><option value="2">2</option>
+            <option value="1">1</option>
+          </select>
+          <input id="review-text" placeholder="Ваш отзыв">
+          <button id="btn-review" class="btn-primary">Отправить</button>
+        </div>
+      </div>
+    </div>`;
+
+  $("#modal-close").onclick = closeModal;
+
+  const buy = $("#btn-buy");
+  if (buy) buy.onclick = async () => {
+    buy.disabled = true;
+    try {
+      await buyGame(state.user.id, gameId);
+      await refreshUser();
+      toast("Игра добавлена в библиотеку", "success");
+      await renderGameModalContent();
+      renderTab();
+    } catch (e) { toast(errMsg(e), "error"); buy.disabled = false; }
+  };
+  const wishBtn = $("#btn-wish");
+  if (wishBtn) wishBtn.onclick = async () => {
+    try {
+      await toggleWish(state.user.id, gameId);
+      await renderGameModalContent();
+      if (state.tab === "wishlist") renderTab();
+    } catch (e) { toast(errMsg(e), "error"); }
+  };
+  const delBtn = $("#btn-delete-game");
+  if (delBtn) delBtn.onclick = () =>
+    deleteGameCascade(gameId, game.title, () => { closeModal(); renderTab(); });
+
+  $("#btn-review").onclick = async () => {
+    const text = $("#review-text").value.trim().slice(0, 1000);
+    const rating = parseInt($("#review-rating").value, 10);
+    try {
+      await addReview(state.user.id, state.user.username, gameId, rating, text);
+      toast("Отзыв сохранён", "success");
+      await renderGameModalContent();
+    } catch (e) { toast(errMsg(e), "error"); }
+  };
+  $("#review-text").onkeydown = (e) => {
+    if (e.key === "Enter") $("#btn-review").click();
+  };
+}
+
+// ==========================================================================
+// Bootstrap
+// ==========================================================================
+onAuthStateChanged(auth, async (fbUser) => {
+  if (fbUser) {
+    let user = await fetchUserDoc(fbUser.uid);
+    if (!user) {
+      try {
+        await setDoc(doc(db, "users", fbUser.uid), {
+          username: fbUser.email.split("@")[0], email: fbUser.email,
+          balance: 50, is_admin: false,
+        });
+        user = await fetchUserDoc(fbUser.uid);
+      } catch (e) { toast("Ошибка профиля: " + errMsg(e), "error"); return; }
+    }
+    state.user = user;
+    renderMain();
+  } else {
+    state.user = null;
+    renderAuth();
+  }
+});
+</script>
+</body>
+</html>
